@@ -15,6 +15,8 @@ const PIN = {
 const DEVICE = {
   DEVICE_ON: 0,
   DEVICE_OFF: 1,
+  DEVICE_SPARK_ON: 1,
+  DEVICE_SPARK_OFF: 0,
 };
 
 @Injectable()
@@ -33,7 +35,7 @@ export class DeviceService {
     this.driveRight = new Gpio({ pin: PIN.PIN_RIGHT });
     this.driveUp = new Gpio({ pin: PIN.PIN_UP });
     this.driveDown = new Gpio({ pin: PIN.PIN_DOWN });
-    this.spark = new Gpio({ pin: PIN.PIN_SPARK });
+    this.spark = new Gpio({ pin: PIN.PIN_SPARK, up: false });
   }
 
   private async delay(ms): Promise<any> {
@@ -73,7 +75,7 @@ export class DeviceService {
       this.writePin(PIN.PIN_RIGHT, DEVICE.DEVICE_OFF);
       this.writePin(PIN.PIN_UP, DEVICE.DEVICE_OFF);
       this.writePin(PIN.PIN_DOWN, DEVICE.DEVICE_OFF);
-      this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_OFF);
+      this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_OFF);
     } catch {}
   }
 
@@ -165,8 +167,8 @@ export class DeviceService {
   }
 
   async setSpark(value): Promise<any> {
-    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_ON);
+    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_ON);
     await this.delay(value * 1000);
-    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_OFF);
+    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_OFF);
   }
 }
