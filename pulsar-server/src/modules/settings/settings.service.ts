@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ApiService } from "../api/api.service";
 import { SocketService } from "../api/socket.service";
 import { defaultSettings } from "./data/settings.data";
-import { SETTING } from "./settings.interface";
+import { SETTING, Setting } from "./settings.interface";
 import { ApiResult } from "../api/api.interface";
 import * as cp from "child_process";
 
@@ -25,9 +25,56 @@ export class SettingsService {
       await this.fillSettings();
       answer = await this.api.getAll("settings");
     }
-    answer.result = answer.result.filter(
-      (item) => item.id !== SETTING.SETTING_PASS,
+    // answer.result = answer.result.filter(
+    //   (item) => item.id !== SETTING.SETTING_SERVER,
+    // );
+
+    // for (const setting of answer.result) {
+    //   if (!setting.type) {
+    //     if (
+    //       settings["id"] == SETTING.SETTING_SERVER ||
+    //       settings["id"] == SETTING.SETTING_PORT
+    //     ) {
+    //       setting.type = "string";
+    //     } else {
+    //       setting.type = "number";
+    //     }
+    //   }
+    //   this.update(setting["id"], setting);
+    // }
+
+    const server = answer.result.find(
+      (item) => item.id === SETTING.SETTING_SERVER,
     );
+    if (server.name === "пароль") {
+      server.name = "Общий сервер";
+      this.update(server.id, server);
+    }
+
+    answer.result.forEach((item: Setting) => {
+      if (!item.type) {
+        if (item.id === SETTING.SETTING_SERVER) {
+          item.type = "string";
+        } else {
+          item.type = "number";
+        }
+        this.update(item.id, item);
+      }
+    });
+
+    const station = answer.result.find(
+      (item) => item.id === SETTING.SETTING_STATION,
+    );
+    if (!station) {
+      const newSetting: Setting = {
+        // id: SETTING.SETTING_STATION,
+        name: "Имя станции",
+        value: "",
+        type: "string",
+      };
+      console.log("test", newSetting.id, newSetting);
+      await this.insert(newSetting.id, newSetting);
+    }
     return { settings: answer, SETTING };
   }
 
@@ -37,6 +84,10 @@ export class SettingsService {
 
   async update(id: number, value: unknown): Promise<ApiResult> {
     return this.api.update("settings", id, value);
+  }
+
+  async insert(id: number, value: unknown): Promise<ApiResult> {
+    return this.api.insert("settings", id, value);
   }
 
   async shutdown(): Promise<any> {

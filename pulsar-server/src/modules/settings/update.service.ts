@@ -30,6 +30,7 @@ export class UpdateService {
       await this.cmd(`rm -rf dist`);
       await this.cmd(`cd /root/pulsar`);
       await this.cmd(`git pull origin master`);
+      await this.cmd(`npm install`);
       // await this.cmd(`node ${source}`);
     } catch (e) {
       answer.result = null;
@@ -94,8 +95,8 @@ export class UpdateService {
     };
     await this.api.create("settings", port);
     const pass = {
-      id: SETTING.SETTING_PASS,
-      name: "Пароль",
+      id: SETTING.SETTING_SERVER,
+      name: "Общий сервер",
       value: "",
     };
     await this.api.create("settings", pass);

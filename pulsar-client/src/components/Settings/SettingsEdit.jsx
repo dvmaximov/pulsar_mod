@@ -27,7 +27,10 @@ const SettingsEdit = ({ setting, onCancel, onSubmit }) => {
 
   const formatSetting = () => {
     const newValue = { ...value };
-    newValue.value = Number((+newValue.value).toFixed(3));
+    if (newValue.type === "number") {
+      console.log(newValue.type)
+      newValue.value = Number((+newValue.value).toFixed(3));
+    }
     return { ...newValue };
   };
 
@@ -42,7 +45,7 @@ const SettingsEdit = ({ setting, onCancel, onSubmit }) => {
             display: "flex",
             flexDirection: "column",
           }}
-        >
+        > {value.type === "number" ?
           <FormControl>
             <TextField
               autoFocus
@@ -60,7 +63,25 @@ const SettingsEdit = ({ setting, onCancel, onSubmit }) => {
                 shrink: true,
               }}
             />
-          </FormControl>
+          </FormControl> :
+          <FormControl>
+            <TextField
+              autoFocus
+              sx={{ m: 1 }}
+              label="Значение"
+              // type="number"
+              // inputProps={{
+              //   max: 350,
+              //   min: 0,
+              //   step: 0.1,
+              // }}
+              value={value.value}
+              onChange={onChangeValue}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </FormControl>}
         </Box>
       </DialogContent>
       <DialogActions>
