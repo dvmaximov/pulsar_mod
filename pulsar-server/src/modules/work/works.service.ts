@@ -3,12 +3,20 @@ import { ApiService } from "../api/api.service";
 import { Work } from "./work.interface";
 import { ApiResult } from "../api/api.interface";
 import { STATUS } from "../dictonary/types/statusType.interface";
+import { on, emit } from "src/modules/api/socket-client.service";
 
 const MAX_WORKS = 10;
 
 @Injectable()
 export class WorksService {
   constructor(private api: ApiService) {}
+
+  public createEvents() {
+    on("getStationWorks", async (data) => {
+      const answer = await this.getAll();
+      emit("stationWorks", { ...data, works: answer.result });
+    });
+  }
 
   private async clearWorks(works): Promise<Array<Work>> {
     let doneWorks = works.filter(

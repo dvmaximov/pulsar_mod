@@ -5,6 +5,7 @@ import { defaultSettings } from "./data/settings.data";
 import { SETTING, Setting } from "./settings.interface";
 import { ApiResult } from "../api/api.interface";
 import * as cp from "child_process";
+import { on, emit } from "src/modules/api/socket-client.service";
 
 const exec = cp.exec;
 
@@ -14,6 +15,13 @@ export class SettingsService {
     setInterval(() => {
       this.socket.sendServerTime();
     }, 60 * 1000);
+  }
+
+  public createEvents() {
+    on("getStationSettings", async (data) => {
+      const answer = await this.getAll();
+      emit("stationSettings", { ...data, settings: answer });
+    });
   }
 
   async getAll(): Promise<any> {

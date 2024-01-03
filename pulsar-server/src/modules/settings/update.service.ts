@@ -23,21 +23,18 @@ export class UpdateService {
 
   async updateCode(): Promise<ApiResult> {
     const answer = { ...initResult };
-    // const source = path.resolve(__dirname, "../../../src/update/update.ts");
     answer.result = "Ok";
     try {
       await this.cmd(`cd /root/pulsar/pulsar-server`);
       await this.cmd(`rm -rf dist`);
       await this.cmd(`cd /root/pulsar`);
       await this.cmd(`git pull origin master`);
+      await this.cmd(`cd /root/pulsar/pulsar-server`);
       await this.cmd(`npm install`);
-      // await this.cmd(`node ${source}`);
     } catch (e) {
       answer.result = null;
       answer.error = e;
     }
-    // await this.cmd(`node ${source}`);
-    // const up = require(source);
 
     try {
       await this.cmd(`pm2 restart 0`);

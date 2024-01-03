@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 let socket = null;
-const callbacks = [];
+let callbacks = [];
 let isFirstConnect = true;
 let socketConnected = false;
 let station;
@@ -19,16 +19,6 @@ export const connectClient = (
   port: string,
   stationName: string,
 ) => {
-  // const host = settings.$state.settings.filter(
-  //   (setting) => setting.name === "serverAddress"
-  // )[0];
-  // const port = settings.$state.settings.filter(
-  //   (setting) => setting.name === "serverPort"
-  // )[0];
-  // const stationName = settings.$state.settings.filter(
-  //   (setting) => setting.name === "stationName"
-  // )[0];
-
   socketConnected = false;
   station = {
     stationType: 1, // StationType.Workstation,
@@ -38,9 +28,23 @@ export const connectClient = (
     const portNumber = port === "" || !port ? "" : `:${port}`;
     const hostName = `${host}${portNumber}`;
     socket = io(hostName);
-    console.log(station);
     isFirstConnect = false;
   }
+  addOnCallback("connect", () => {
+    console.log("socket connect");
+    emit("registration");
+    socketConnected = true;
+  });
+
+  addOnCallback("disconnect", async (reason) => {
+    console.log("socket disconnect", reason);
+    callbacks = [];
+    socketConnected = false;
+  });
+
+  // addOnCallback("getStationSettings", async (reason) => {
+  //   console.log(reason);
+  // });
 };
 
 export const on = (event, cb) => {

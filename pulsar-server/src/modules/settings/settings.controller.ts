@@ -15,8 +15,6 @@ import { Setting } from "./settings.interface";
 import { SettingsService } from "./settings.service";
 import { BackupService } from "./backup.service";
 import { UpdateService } from "./update.service";
-import { SETTING } from "./settings.interface";
-import { connectClient } from "src/modules/api/socket-client.service";
 
 @Controller("api/settings")
 export class SettingsController {
@@ -24,25 +22,7 @@ export class SettingsController {
     private readonly settingsService: SettingsService,
     private readonly backupService: BackupService,
     private readonly updateService: UpdateService,
-  ) {
-    let host = "";
-    let port = "";
-    let station = "";
-    this.getAll().then((items) => {
-      const settings = items.settings.result;
-      let result: Setting = settings.find(
-        (setting) => setting.id === SETTING.SETTING_SERVER,
-      );
-      host = result.value;
-      result = settings.find((setting) => setting.id === SETTING.SETTING_PORT);
-      port = result.value;
-      result = settings.find(
-        (setting) => setting.id === SETTING.SETTING_STATION,
-      );
-      station = result.value;
-      connectClient(host, port, station);
-    });
-  }
+  ) {}
 
   @Get()
   getAll(): Promise<any> {

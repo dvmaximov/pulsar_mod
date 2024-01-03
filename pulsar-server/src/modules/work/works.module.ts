@@ -11,5 +11,6 @@ import { SettingsModule } from "../settings/settings.module";
   imports: [DictonaryModule, SettingsModule],
   controllers: [WorksController],
   providers: [WorksService, RunnerService, DeviceService],
+  exports: [WorksService],
 })
 export class WorksModule {}
