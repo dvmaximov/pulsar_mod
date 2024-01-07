@@ -23,6 +23,11 @@ export class TasksService {
       const answer = await this.update(id, task);
       emit("stationTaskUpdated", { ...data, message: answer.result });
     });
+    on("moveStationTask", async (data) => {
+      const task = data.message.task;
+      const answer = await this.create(task);
+      emit("stationTaskMoved", { ...data, message: answer.result });
+    });
   }
 
   async getAll(): Promise<ApiResult> {

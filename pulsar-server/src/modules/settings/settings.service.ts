@@ -5,7 +5,7 @@ import { defaultSettings } from "./data/settings.data";
 import { SETTING, Setting } from "./settings.interface";
 import { ApiResult } from "../api/api.interface";
 import * as cp from "child_process";
-import { on, emit } from "src/modules/api/socket-client.service";
+import { on, emit, reconnect } from "src/modules/api/socket-client.service";
 
 const exec = cp.exec;
 
@@ -97,7 +97,27 @@ export class SettingsService {
   }
 
   async update(id: number, value: unknown): Promise<ApiResult> {
-    return this.api.update("settings", id, value);
+    const answer = await this.api.update("settings", id, value);
+    if (
+      +id === SETTING.SETTING_PORT ||
+      +id === SETTING.SETTING_SERVER ||
+      +id === SETTING.SETTING_STATION
+    ) {
+      const items = await this.getAll();
+      const settings = items.settings.result;
+      let result: Setting = settings.find(
+        (setting) => setting.id === SETTING.SETTING_SERVER,
+      );
+      const host = result.value;
+      result = settings.find((setting) => setting.id === SETTING.SETTING_PORT);
+      const port = result.value;
+      result = settings.find(
+        (setting) => setting.id === SETTING.SETTING_STATION,
+      );
+      const station = result.value;
+      reconnect(host, port, station);
+    }
+    return answer;
   }
 
   async insert(id: number, value: unknown): Promise<ApiResult> {

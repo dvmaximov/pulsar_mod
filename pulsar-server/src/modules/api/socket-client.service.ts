@@ -14,6 +14,25 @@ export const addOnCallback = (event, cb) => {
   }
 };
 
+export const reconnect = (host: string, port: string, stationName: string) => {
+  station = {
+    stationType: 1, // StationType.Workstation,
+    stationName: stationName,
+  };
+  const portNumber = port === "" || !port ? "" : `:${port}`;
+  const hostName = `${host}${portNumber}`;
+  console.log(hostName);
+  if (socketConnected) {
+    socketConnected = false;
+    socket.disconnect();
+    socket.hostName = hostName;
+    console.log(socket.hostName);
+    socket.connect();
+  } else {
+    connectClient(host, port, stationName);
+  }
+};
+
 export const connectClient = (
   host: string,
   port: string,
