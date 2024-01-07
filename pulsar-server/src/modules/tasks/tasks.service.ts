@@ -13,6 +13,16 @@ export class TasksService {
       const answer = await this.getAll();
       emit("stationTasks", { ...data, message: answer.result });
     });
+    on("deleteStationTask", async (data) => {
+      const answer = await this.delete(data.message.id);
+      emit("stationTaskDeleted", { ...data, message: answer.result });
+    });
+    on("updateStationTask", async (data) => {
+      const id = data.message.task.id;
+      const task = data.message.task;
+      const answer = await this.update(id, task);
+      emit("stationTaskUpdated", { ...data, message: answer.result });
+    });
   }
 
   async getAll(): Promise<ApiResult> {

@@ -43,7 +43,7 @@ export class ApiService {
   async update(table: string, id: unknown, value: unknown): Promise<any> {
     const answer: ApiResult = { ...initResult };
     try {
-      console.log(`${host}${table}/${id}`, value);
+      // console.log(`${host}${table}/${id}`, value);
       const result = await axios.put(`${host}${table}/${id}`, value);
       answer.result = result.data;
     } catch (e) {
@@ -55,7 +55,7 @@ export class ApiService {
   async insert(table: string, id: unknown, value: unknown): Promise<any> {
     const answer: ApiResult = { ...initResult };
     try {
-      console.log(`sending ${host}${table}}`, value);
+      // console.log(`sending ${host}${table}}`, value);
       const result = await axios.post(`${host}${table}`, value);
       answer.result = result.data;
     } catch (e) {

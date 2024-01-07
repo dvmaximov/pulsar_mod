@@ -20,7 +20,13 @@ export class SettingsService {
   public createEvents() {
     on("getStationSettings", async (data) => {
       const answer = await this.getAll();
-      emit("stationSettings", { ...data, settings: answer });
+      emit("stationSettings", { ...data, message: answer.settings.result });
+    });
+    on("updateStationSetting", async (data) => {
+      const id = data.message.setting.id;
+      const setting = data.message.setting;
+      const answer = await this.update(id, setting);
+      emit("stationSettingUpdated", { ...data, message: answer.result });
     });
   }
 

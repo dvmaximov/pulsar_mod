@@ -2,6 +2,7 @@ import { Controller, Get, Render } from "@nestjs/common";
 import { SettingsService } from "./modules/settings/settings.service";
 import { TasksService } from "./modules/tasks/tasks.service";
 import { WorksService } from "./modules/work/works.service";
+import { RunnerService } from "./modules/work/runner.service";
 import { SETTING, Setting } from "./modules/settings/settings.interface";
 import { connectClient } from "src/modules/api/socket-client.service";
 
@@ -11,6 +12,7 @@ export class AppController {
     private readonly settingsService: SettingsService,
     private readonly tasksService: TasksService,
     private readonly worksService: WorksService,
+    private readonly runnerService: RunnerService,
   ) {
     let host = "";
     let port = "";
@@ -31,6 +33,7 @@ export class AppController {
       this.settingsService.createEvents();
       this.tasksService.createEvents();
       this.worksService.createEvents();
+      this.runnerService.createEvents();
     });
   }
 

@@ -9,6 +9,7 @@ import { STATUS, StatusType } from "../dictonary/types/statusType.interface";
 import { DeviceService } from "./device.service";
 import { ApiResult } from "../api/api.interface";
 import { BackupService } from "../settings/backup.service";
+import { on, emit } from "src/modules/api/socket-client.service";
 
 const ALONE_ID = 1;
 
@@ -29,6 +30,21 @@ export class RunnerService {
     private backupService: BackupService,
   ) {
     this.prepare();
+  }
+
+  public createEvents() {
+    on("createStationWorks", async (data) => {
+      const answer = await this.works.create(data.message.work);
+      if (answer.result) {
+        this.addWork(answer.result);
+        emit("stationWorksCreated", { ...data, message: answer.result });
+      }
+    });
+    on("deleteStationWorks", async (data) => {
+      const answer = await this.works.delete(data.message.id);
+      this.removeWork(data.message.id);
+      emit("stationWorksDeleted", { ...data, message: answer.result });
+    });
   }
 
   private async prepare() {

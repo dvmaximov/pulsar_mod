@@ -14,7 +14,7 @@ export class WorksService {
   public createEvents() {
     on("getStationWorks", async (data) => {
       const answer = await this.getAll();
-      emit("stationWorks", { ...data, works: answer.result });
+      emit("stationWorks", { ...data, message: answer.result });
     });
   }
 
