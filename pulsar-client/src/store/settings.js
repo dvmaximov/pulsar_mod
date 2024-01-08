@@ -71,6 +71,13 @@ class Settings {
     await api.fetch(`api/settings/shutdown`);
   }
 
+  async restart() {
+    setTimeout(() => {
+      window.close();
+    }, 2000);
+    await api.fetch(`api/settings/restart`);
+  }
+
   async calibrateAzimuth(time) {
     return await api.fetch(`api/works/calibrateAzimuth?time=${time}`);
   }

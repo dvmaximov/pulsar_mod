@@ -42,6 +42,10 @@ const Settings = () => {
         message = `Выключить сервер?
         `;
         break;
+      case "restart":
+        message = `Перезапустить сервер?
+        `;
+        break;
     }
     setConfirmMessage(() => message);
     setOpenConfirm(true);
@@ -56,6 +60,9 @@ const Settings = () => {
         break;
       case "shutdown":
         submit = settings.shutdown;
+        break;
+      case "restart":
+        submit = settings.restart;
         break;
     }
     submit();

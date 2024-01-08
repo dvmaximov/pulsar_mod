@@ -36,6 +36,17 @@ const SettingsControls = ({ openDialog, openConfirm, disableAll }) => {
         variant="contained"
         color="primary"
         onClick={() => {
+          openConfirm("restart");
+        }}
+        sx={{ mr: 1, mb: 1 }}
+      >
+        Рестарт
+      </Button>
+      <Button
+        disabled={disableAll}
+        variant="contained"
+        color="primary"
+        onClick={() => {
           openDialog("azimuth");
         }}
         sx={{ mr: 1, mb: 1 }}

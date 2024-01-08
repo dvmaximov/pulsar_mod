@@ -98,25 +98,25 @@ export class SettingsService {
 
   async update(id: number, value: unknown): Promise<ApiResult> {
     const answer = await this.api.update("settings", id, value);
-    if (
-      +id === SETTING.SETTING_PORT ||
-      +id === SETTING.SETTING_SERVER ||
-      +id === SETTING.SETTING_STATION
-    ) {
-      const items = await this.getAll();
-      const settings = items.settings.result;
-      let result: Setting = settings.find(
-        (setting) => setting.id === SETTING.SETTING_SERVER,
-      );
-      const host = result.value;
-      result = settings.find((setting) => setting.id === SETTING.SETTING_PORT);
-      const port = result.value;
-      result = settings.find(
-        (setting) => setting.id === SETTING.SETTING_STATION,
-      );
-      const station = result.value;
-      reconnect(host, port, station);
-    }
+    // if (
+    //   +id === SETTING.SETTING_PORT ||
+    //   +id === SETTING.SETTING_SERVER ||
+    //   +id === SETTING.SETTING_STATION
+    // ) {
+    //   const items = await this.getAll();
+    //   const settings = items.settings.result;
+    //   let result: Setting = settings.find(
+    //     (setting) => setting.id === SETTING.SETTING_SERVER,
+    //   );
+    //   const host = result.value;
+    //   result = settings.find((setting) => setting.id === SETTING.SETTING_PORT);
+    //   const port = result.value;
+    //   result = settings.find(
+    //     (setting) => setting.id === SETTING.SETTING_STATION,
+    //   );
+    //   const station = result.value;
+    //   reconnect(host, port, station);
+    // }
     return answer;
   }
 
@@ -130,6 +130,10 @@ export class SettingsService {
 
   async reboot(): Promise<any> {
     return await this.cmd(`reboot`);
+  }
+
+  async restart(): Promise<any> {
+    return await this.cmd(`pm2 restart 0`);
   }
 
   async serverTime(): Promise<any> {

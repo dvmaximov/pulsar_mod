@@ -71,6 +71,11 @@ export class SettingsController {
     return this.settingsService.reboot().catch(() => {});
   }
 
+  @Get("/restart")
+  restart(): Promise<any> {
+    return this.settingsService.restart().catch(() => {});
+  }
+
   @Put(":id")
   async update(@Param("id") id, @Body() setting: Setting): Promise<any> {
     return this.settingsService.update(id, setting);
