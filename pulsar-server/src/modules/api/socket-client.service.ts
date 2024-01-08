@@ -14,12 +14,17 @@ export const addOnCallback = (event, cb) => {
   }
 };
 
-export const reconnect = (host: string, port: string, stationName: string) => {
+export const reconnect = (
+  host: string,
+  port: string | number,
+  stationName: string,
+) => {
   station = {
     stationType: 1, // StationType.Workstation,
     stationName: stationName,
   };
-  const portNumber = port === "" || !port ? "" : `:${port}`;
+  const portNumber =
+    port === "" || !port || port === 0 || port === "0" ? "" : `:${port}`;
   const hostName = `${host}${portNumber}`;
   console.log(hostName);
   if (socketConnected) {
@@ -35,7 +40,7 @@ export const reconnect = (host: string, port: string, stationName: string) => {
 
 export const connectClient = (
   host: string,
-  port: string,
+  port: string | number,
   stationName: string,
 ) => {
   socketConnected = false;
@@ -44,7 +49,8 @@ export const connectClient = (
     stationName: stationName,
   };
   if (isFirstConnect) {
-    const portNumber = port === "" || !port ? "" : `:${port}`;
+    const portNumber =
+      port === "" || !port || port === 0 || port === "0" ? "" : `:${port}`;
     const hostName = `${host}${portNumber}`;
     socket = io(hostName);
     isFirstConnect = false;
