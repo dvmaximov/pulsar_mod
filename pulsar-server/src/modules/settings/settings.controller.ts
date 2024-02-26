@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { createReadStream } from "fs";
 import { ApiResult } from "../api/api.interface";
-import { Setting } from "./settings.interface";
+import { Setting } from "./entities/setting.entity";
 import { SettingsService } from "./settings.service";
 import { BackupService } from "./backup.service";
 import { UpdateService } from "./update.service";

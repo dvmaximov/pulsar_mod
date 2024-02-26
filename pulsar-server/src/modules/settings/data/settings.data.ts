@@ -1,5 +1,5 @@
-import { Setting, SETTING } from "../settings.interface";
-export const defaultSettings: Setting[] = [
+import { SETTING } from "../entities/setting.entity";
+export const defaultSettings = [
   {
     id: SETTING.SETTING_AZIMUTH_SPEED,
     type: "number",
@@ -40,6 +40,12 @@ export const defaultSettings: Setting[] = [
     id: SETTING.SETTING_SERVER,
     type: "string",
     name: "Общий сервер",
+    value: "",
+  },
+  {
+    id: SETTING.SETTING_STATION,
+    type: "string",
+    name: "Имя станции",
     value: "",
   },
 ];

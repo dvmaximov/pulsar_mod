@@ -25,7 +25,7 @@ class Settings {
 
   async fetch() {
     const answer = await api.fetch("api/settings");
-    this.fill(answer.settings.result);
+    this.fill(answer.settings);
     this.fillSETTING(answer.SETTING);
     await api.fetch("api/settings/serverTime");
   }

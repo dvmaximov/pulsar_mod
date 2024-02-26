@@ -9,7 +9,7 @@ import {
   Req,
 } from "@nestjs/common";
 import { Request } from "express";
-import { Work } from "./work.interface";
+import { Work } from "./entities/work.entity";
 
 import { WorksService } from "./works.service";
 import { RunnerService } from "./runner.service";

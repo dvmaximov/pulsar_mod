@@ -15,11 +15,12 @@ const CurrentWork = () => {
   }, []);
 
   useEffect(() => {
-    works.fetchCurrentWork();
+    works.fetchCurrentWork();  
   }, []);
 
   let details = null;
   const currentWork = works.currentWork?.work;
+
   if (currentWork) {
     details = currentWork.details.map((detail) => {
       return <CurrentWorkItem key={detail.id} work={detail} />;

@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { ApiService } from "../api/api.service";
 import { SocketService } from "../api/socket.service";
 
 import { copyFileSync, readFileSync, writeFileSync, mkdirSync } from "fs";
@@ -12,7 +11,7 @@ const exec = cp.exec;
 
 @Injectable()
 export class BackupService {
-  constructor(private api: ApiService, private socket: SocketService) {}
+  constructor(private socket: SocketService) {}
 
   private generateName(): string {
     let name = new Date().toLocaleString();
@@ -22,14 +21,14 @@ export class BackupService {
       .replace(/\./g, "-")
       .replace(/:/g, "-")
       .replace(/\//g, "-");
-    name = `backupDB_${name}.json`;
+    name = `backupDB_${name}.sqlite`;
     return name;
   }
 
   backup(filename = null) {
     const name = filename ? filename : this.generateName();
 
-    const source = path.resolve(__dirname, "../../../db.json");
+    const source = path.resolve(__dirname, "../../../pulsar.sqlite");
     const dist = path.resolve(__dirname, `../../../../backup/${name}`);
     const distPath = path.resolve(__dirname, `../../../../backup`);
 
@@ -40,15 +39,15 @@ export class BackupService {
     copyFileSync(source, dist);
     let db: any = {};
 
-    try {
-      db = readFileSync(dist, "utf8").toString();
-      db = JSON.parse(db);
-      db["currentWork"] = [];
-      db = JSON.stringify(db);
-      writeFileSync(dist, db);
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   db = readFileSync(dist, "utf8").toString();
+    //   db = JSON.parse(db);
+    //   db["currentWork"] = [];
+    //   db = JSON.stringify(db);
+    //   writeFileSync(dist, db);
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
     return { fileName: name, dist };
   }

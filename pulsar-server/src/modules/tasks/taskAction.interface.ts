@@ -1,4 +1,4 @@
-import { ActionType } from "../dictonary/types/actionType.interface";
+import { ActionType } from "../dictonary/entities/action-types.entity";
 
 export interface TaskAction {
   id: number;

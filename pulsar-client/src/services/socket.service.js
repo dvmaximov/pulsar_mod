@@ -9,7 +9,7 @@ socket.on("connect", () => {
 
 socket.on("workStatusUpdate", (e) => {
   works.fetch();
-  works.fetchCurrentWork();
+  works.fetchCurrentWork(e);
 });
 
 socket.on("serverTime", (e) => {

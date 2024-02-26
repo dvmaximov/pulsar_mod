@@ -14,11 +14,7 @@ class Works {
   }
 
   fillCurrentWork(data) {
-    if (data.length > 0) {
-      this.currentWork = data[0];
-    } else {
-      this.currentWork = null;
-    }
+      this.currentWork = data;
   }
 
   async fetch() {

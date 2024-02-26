@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { ApiService } from "../api/api.service";
 import { SocketService } from "../api/socket.service";
 import { DictonaryService } from "../dictonary/dictonary.service";
-import { Work } from "./work.interface";
+import { Work } from "./entities/work.entity";
 import { WorksService } from "./works.service";
-import { ACTION, ActionType } from "../dictonary/types/actionType.interface";
-import { STATUS, StatusType } from "../dictonary/types/statusType.interface";
+import { ACTION, ActionType } from "../dictonary/entities/action-types.entity";
+import { STATUS, StatusType } from "../dictonary/entities/status-types.entity";
 import { DeviceService } from "./device.service";
 import { ApiResult } from "../api/api.interface";
 import { BackupService } from "../settings/backup.service";
@@ -16,14 +15,12 @@ const ALONE_ID = 1;
 @Injectable()
 export class RunnerService {
   private timers = [];
-  private currentWork = null;
   private statusTypes = null;
   private actionTypes = null;
   private stopped = false;
 
   constructor(
     private works: WorksService,
-    private api: ApiService,
     private dictonary: DictonaryService,
     private socket: SocketService,
     private device: DeviceService,
@@ -81,7 +78,7 @@ export class RunnerService {
   }
 
   public removeWork(workId) {
-    if (this.currentWork && this.currentWork.work.id === +workId) {
+    if (this.works.currentWork && this.works.currentWork.work.id === +workId) {
       this.removeCurrentWork();
     }
     this.removeTimer(workId);
@@ -114,7 +111,7 @@ export class RunnerService {
     if (!newStatus) return;
     work.status = newStatus;
     await this.works.update(work.id, work);
-    this.socket.workStatusUpdate();
+    this.socket.workStatusUpdate(this.works.currentWork);
   }
 
   private async fillTimers() {
@@ -148,9 +145,8 @@ export class RunnerService {
   }
 
   private async startWork(work) {
-    await this.backupService.backup("auto_backup.json");
     this.stopped = false;
-    if (this.currentWork) {
+    if (this.works.currentWork) {
       this.updateStatus(work, STATUS.STATUS_EXPIRED);
       return;
     }
@@ -162,30 +158,27 @@ export class RunnerService {
   }
 
   private async createCurrentWork(work: Work): Promise<any> {
-    this.currentWork = {
+    this.works.currentWork = {
       id: ALONE_ID,
       work,
     };
-    await this.api.create("currentWork", this.currentWork);
     await this.prepareDetails();
     await this.updateCurrentWork();
   }
 
   private async updateCurrentWork(): Promise<any> {
-    await this.api.update("currentWork", ALONE_ID, this.currentWork);
-    this.socket.workStatusUpdate();
+    this.socket.workStatusUpdate(this.works.currentWork);
   }
 
   private async removeCurrentWork(): Promise<any> {
     try {
-      this.currentWork = null;
-      await this.api.delete("currentWork", ALONE_ID);
+      this.works.currentWork = null;
     } catch {}
   }
 
   private async prepareDetails(): Promise<any> {
-    if (!this.currentWork) return;
-    const actions = this.currentWork.work.item.actions;
+    if (!this.works.currentWork) return;
+    const actions = this.works.currentWork.work.item.actions;
     const defaultStatus = this.getStatus(STATUS.STATUS_WAIT);
     const waitAction = this.getAction(ACTION.ACTION_WAIT);
     const details = [];
@@ -235,7 +228,7 @@ export class RunnerService {
       };
       details.push({ ...zeroAction, status: { ...defaultStatus } });
     }
-    this.currentWork.work.details = [...details];
+    this.works.currentWork.work.details = [...details];
   }
 
   async calibrateAzimuth(time) {
@@ -247,8 +240,8 @@ export class RunnerService {
   }
 
   private async startLoop() {
-    if (!this.currentWork) return;
-    const details = this.currentWork.work.details;
+    if (!this.works.currentWork) return;
+    const details = this.works.currentWork.work.details;
     for (let i = 0; i < details.length; i++) {
       if (this.stopped) break;
       details[i].status = this.getStatus(STATUS.STATUS_RUN);
@@ -276,8 +269,8 @@ export class RunnerService {
   async stopAll(): Promise<any> {
     this.stopped = true;
     await this.device.stopAll();
-    if (this.currentWork) {
-      await this.updateStatus(this.currentWork.work, STATUS.STATUS_STOPPED);
+    if (this.works.currentWork) {
+      await this.updateStatus(this.works.currentWork.work, STATUS.STATUS_STOPPED);
       await this.removeCurrentWork();
     }
   }

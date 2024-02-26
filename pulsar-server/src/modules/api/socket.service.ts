@@ -24,8 +24,8 @@ export class SocketService {
     this.server.sockets.emit(id, data);
   }
 
-  workStatusUpdate(): void {
-    this.sendEvent("workStatusUpdate");
+  workStatusUpdate( data?: any): void {
+    this.sendEvent("workStatusUpdate", data);
   }
 
   settingsUpdate(): void {

@@ -1,12 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { ApiService } from "../api/api.service";
-import { Task } from "./task.interface";
-import { ApiResult } from "../api/api.interface";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { Task, TaskPack } from "./entities/task.entity";
+import { ApiResult, initResult } from "../api/api.interface";
 import { on, emit } from "src/modules/api/socket-client.service";
 
 @Injectable()
 export class TasksService {
-  constructor(private api: ApiService) {}
+  constructor(
+    @InjectRepository(TaskPack) private readonly tasksRepository: Repository<TaskPack>,
+  ) {}
 
   public createEvents() {
     on("getStationTasks", async (data) => {
@@ -30,23 +34,45 @@ export class TasksService {
     });
   }
 
+  async create(task: Task): Promise<ApiResult> {
+    const newTaskPack = TaskPack.taskToPack(task);
+    const answer = {...initResult};
+    let taskPack = this.tasksRepository.create(newTaskPack);
+    taskPack = await this.tasksRepository.save(taskPack);
+    answer.result = taskPack;
+    return answer;
+  }
+
   async getAll(): Promise<ApiResult> {
-    return await this.api.getAll("tasks");
+    const taskPacks = await this.tasksRepository.find();
+    const tasks: Task[] = [];
+    for (const taskPack of taskPacks) {
+      tasks.push(TaskPack.packToTask(taskPack))
+    }
+    return { ...initResult, result: tasks };
   }
 
   async getById(id: number): Promise<ApiResult> {
-    return await this.api.getById("tasks", id);
-  }
-
-  async create(task: Task): Promise<ApiResult> {
-    return await this.api.create("tasks", task);
+    const taskPack = await this.tasksRepository.findOne({where: {id: id}});
+    return { ...initResult, result: TaskPack.packToTask(taskPack) };
   }
 
   async update(id: number, task: Task): Promise<ApiResult> {
-    return await this.api.update("tasks", id, task);
+    const taskPack = await this.tasksRepository.findOne({ where: { id: id } });
+    Object.assign(taskPack, TaskPack.taskToPack(task));
+    const updated =  await this.tasksRepository.save(taskPack);
+    if (!updated) {
+      return { ...initResult, error: 'Ошибка сохранения программы.'};
+    }
+    return { ...initResult, result: updated };
   }
 
   async delete(id: any): Promise<ApiResult> {
-    return await this.api.delete("tasks", id);
+    const answer = {...initResult}
+    const result = await this.tasksRepository.delete(id);
+    if (result.affected === 0) {
+      answer.error = `Действие "${id}" не найдено`;
+    }
+    return {...answer, result: "Программа удалена"};
   }
 }

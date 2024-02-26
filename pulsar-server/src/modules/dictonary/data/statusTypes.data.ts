@@ -1,4 +1,4 @@
-import { STATUS } from "../types/statusType.interface";
+import { STATUS } from "../entities/status-types.entity";
 export const defaultStatus = [
   {
     id: STATUS.STATUS_WAIT,

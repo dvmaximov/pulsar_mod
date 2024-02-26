@@ -28,7 +28,6 @@ const SettingsEdit = ({ setting, onCancel, onSubmit }) => {
   const formatSetting = () => {
     const newValue = { ...value };
     if (newValue.type === "number") {
-      console.log(newValue.type)
       newValue.value = Number((+newValue.value).toFixed(3));
     }
     return { ...newValue };

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { SettingsService } from "../settings/settings.service";
 import { Gpio } from "./gpio.service";
-import { SETTING } from "../settings/settings.interface";
+import { SETTING } from "../settings/entities/setting.entity";
 import { SocketService } from "../api/socket.service";
 
 const PIN = {
@@ -81,13 +81,13 @@ export class DeviceService {
 
   private async calculeteAngle(azimuth): Promise<any> {
     let speed: any = await this.settings.getById(SETTING.SETTING_AZIMUTH_SPEED);
-    speed = speed.result.value;
+    speed = +speed.result.value;
     if (speed === 0) return 0;
 
     let currentAngle: any = await this.settings.getById(
       SETTING.SETTING_CURRENT_AZIMUTH,
     );
-    currentAngle = currentAngle.result.value;
+    currentAngle = +currentAngle.result.value;
     const different = azimuth - currentAngle;
     let time = different / speed;
     /**
@@ -101,11 +101,11 @@ export class DeviceService {
 
   private async calculeteSlope(slope): Promise<any> {
     let speed: any = await this.settings.getById(SETTING.SETTING_SLOPE_SPEED);
-    speed = speed.result.value;
+    speed = +speed.result.value;
     let currentSlope: any = await this.settings.getById(
       SETTING.SETTING_CURRENT_SLOPE,
     );
-    currentSlope = currentSlope.result.value;
+    currentSlope = +currentSlope.result.value;
     const different = slope - currentSlope;
     return different / speed;
   }
@@ -125,6 +125,7 @@ export class DeviceService {
   async setAzimuth(value): Promise<any> {
     try {
       let time = await this.calculeteAngle(value);
+
       if (time === 0) return;
       const direction = time < 0 ? PIN.PIN_LEFT : PIN.PIN_RIGHT;
       time = Math.abs(time * 1000);
@@ -163,7 +164,7 @@ export class DeviceService {
   }
 
   async setWait(value): Promise<any> {
-    await this.delay(value * 1000);
+    await this.delay((+value) * 1000);
   }
 
   async setSpark(value): Promise<any> {

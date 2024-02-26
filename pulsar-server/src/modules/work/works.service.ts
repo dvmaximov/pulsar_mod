@@ -1,15 +1,22 @@
 import { Injectable } from "@nestjs/common";
-import { ApiService } from "../api/api.service";
-import { Work } from "./work.interface";
-import { ApiResult } from "../api/api.interface";
-import { STATUS } from "../dictonary/types/statusType.interface";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { ApiResult, initResult } from "../api/api.interface";
+import { STATUS } from "../dictonary/entities/status-types.entity";
 import { on, emit } from "src/modules/api/socket-client.service";
+import { Work, WorkPack } from "./entities/work.entity";
+
 
 const MAX_WORKS = 10;
 
 @Injectable()
 export class WorksService {
-  constructor(private api: ApiService) {}
+  currentWork = null;
+
+  constructor(
+    @InjectRepository(WorkPack) private readonly worksRepository: Repository<WorkPack>,
+    ) {}
 
   public createEvents() {
     on("getStationWorks", async (data) => {
@@ -41,30 +48,43 @@ export class WorksService {
   }
 
   async getAll(): Promise<ApiResult> {
-    const answer: ApiResult = await this.api.getAll("works");
-    try {
-      answer.result = await this.clearWorks(answer.result);
-    } catch (e) {
-      answer.result = null;
-      answer.error = e;
+    const workPacks = await this.worksRepository.find();
+    const works: Work[] = [];
+    for (const workPack of workPacks) {
+      works.push(WorkPack.packToWork(workPack))
     }
-
-    return answer;
+    return { ...initResult, result: works };    
   }
 
   async getCurrentWork(): Promise<ApiResult> {
-    return await this.api.getAll("currentWork");
+    return {...initResult, result: this.currentWork};
   }
 
   async create(work: Work): Promise<ApiResult> {
-    return await this.api.create("works", work);
+    const newWorkPack = WorkPack.workToPack(work);
+    const answer = {...initResult};
+    let workPack = this.worksRepository.create(newWorkPack);
+    workPack = await this.worksRepository.save(workPack);
+    answer.result = {...work, id: workPack.id};
+    return answer;    
   }
 
   async update(id: number, work: Work): Promise<ApiResult> {
-    return await this.api.update("works", id, work);
+    const workPack = await this.worksRepository.findOne({ where: { id: id } });
+    Object.assign(workPack, WorkPack.workToPack(work));
+    const updated =  await this.worksRepository.save(workPack);
+    if (!updated) {
+      return { ...initResult, error: 'Ошибка сохранения задачи.'};
+    }
+    return { ...initResult, result: updated };
   }
 
-  async delete(id: any): Promise<ApiResult> {
-    return await this.api.delete("works", id);
+  async delete(id: number): Promise<ApiResult> {
+    const answer = {...initResult}
+    const result = await this.worksRepository.delete(id);
+    if (result.affected === 0) {
+      answer.error = `Действие "${id}" не найдено`;
+    }
+    return {...answer, result: "Задача удалена"};
   }
 }

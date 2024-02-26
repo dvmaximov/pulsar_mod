@@ -1,26 +1,37 @@
-import { Injectable } from "@nestjs/common";
-import { ApiService } from "../api/api.service";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { SocketService } from "../api/socket.service";
 import { defaultSettings } from "./data/settings.data";
-import { SETTING, Setting } from "./settings.interface";
 import { ApiResult } from "../api/api.interface";
 import * as cp from "child_process";
 import { on, emit, reconnect } from "src/modules/api/socket-client.service";
+import { SETTING, Setting } from "./entities/setting.entity"
+import { CreateSettingDto } from "./dto/create-setting.dto";
+import { UpdateSettingDto } from "./dto/Update-setting.dto";
 
 const exec = cp.exec;
 
 @Injectable()
 export class SettingsService {
-  constructor(private api: ApiService, private socket: SocketService) {
+  constructor(
+    private socket: SocketService,
+    @InjectRepository(Setting) private readonly settingsRepository: Repository<Setting>,
+  ) {
     setInterval(() => {
       this.socket.sendServerTime();
     }, 60 * 1000);
+
+    this.settingsRepository.find().then((actions) => {
+      if (actions.length === 0) this.fillSettings();
+    });
   }
 
   public createEvents() {
     on("getStationSettings", async (data) => {
       const answer = await this.getAll();
-      emit("stationSettings", { ...data, message: answer.settings.result });
+      emit("stationSettings", { ...data, message: answer.settings });
     });
     on("updateStationSetting", async (data) => {
       const id = data.message.setting.id;
@@ -30,98 +41,41 @@ export class SettingsService {
     });
   }
 
+  private async create(createSettingDto: CreateSettingDto): Promise<Setting> {
+    const setting = this.settingsRepository.create(createSettingDto);
+    return await this.settingsRepository.save(setting);  
+  }    
+
   async getAll(): Promise<any> {
-    let answer = await this.api.getAll("settings");
-    if (!answer.result || !Array.isArray(answer.result)) return answer;
-
-    const settings = answer.result;
-    if (settings.length === 0) {
-      await this.fillSettings();
-      answer = await this.api.getAll("settings");
-    }
-    // answer.result = answer.result.filter(
-    //   (item) => item.id !== SETTING.SETTING_SERVER,
-    // );
-
-    // for (const setting of answer.result) {
-    //   if (!setting.type) {
-    //     if (
-    //       settings["id"] == SETTING.SETTING_SERVER ||
-    //       settings["id"] == SETTING.SETTING_PORT
-    //     ) {
-    //       setting.type = "string";
-    //     } else {
-    //       setting.type = "number";
-    //     }
-    //   }
-    //   this.update(setting["id"], setting);
-    // }
-
-    const server = answer.result.find(
-      (item) => item.id === SETTING.SETTING_SERVER,
-    );
-    if (server.name === "пароль") {
-      server.name = "Общий сервер";
-      this.update(server.id, server);
-    }
-
-    answer.result.forEach((item: Setting) => {
-      if (!item.type) {
-        if (item.id === SETTING.SETTING_SERVER) {
-          item.type = "string";
-        } else {
-          item.type = "number";
-        }
-        this.update(item.id, item);
-      }
-    });
-
-    const station = answer.result.find(
-      (item) => item.id === SETTING.SETTING_STATION,
-    );
-    if (!station) {
-      const newSetting: Setting = {
-        // id: SETTING.SETTING_STATION,
-        name: "Имя станции",
-        value: "",
-        type: "string",
-      };
-      console.log("test", newSetting.id, newSetting);
-      await this.insert(newSetting.id, newSetting);
-    }
-    return { settings: answer, SETTING };
+    const settings = await this.settingsRepository.find();
+    return { settings , SETTING };
   }
 
   async getById(id: number): Promise<ApiResult> {
-    return await this.api.getById("settings", id);
+    const setting =  await this.findOne(id);
+    if (!setting) {
+      return { result: null, error: 'Настройка не найдена.'};
+    }
+    return { result: setting, error: null};
   }
 
-  async update(id: number, value: unknown): Promise<ApiResult> {
-    const answer = await this.api.update("settings", id, value);
-    // if (
-    //   +id === SETTING.SETTING_PORT ||
-    //   +id === SETTING.SETTING_SERVER ||
-    //   +id === SETTING.SETTING_STATION
-    // ) {
-    //   const items = await this.getAll();
-    //   const settings = items.settings.result;
-    //   let result: Setting = settings.find(
-    //     (setting) => setting.id === SETTING.SETTING_SERVER,
-    //   );
-    //   const host = result.value;
-    //   result = settings.find((setting) => setting.id === SETTING.SETTING_PORT);
-    //   const port = result.value;
-    //   result = settings.find(
-    //     (setting) => setting.id === SETTING.SETTING_STATION,
-    //   );
-    //   const station = result.value;
-    //   reconnect(host, port, station);
-    // }
-    return answer;
+  async findOne(id: number): Promise<Setting> {
+    const user = await this.settingsRepository.findOne({ where: { id: id } });
+    if (!user) {
+      return ;
+    }
+    return (user);  
   }
 
-  async insert(id: number, value: unknown): Promise<ApiResult> {
-    return this.api.insert("settings", id, value);
+  async update(id: number, updateSettingDto: UpdateSettingDto): Promise<ApiResult> {
+    const setting = await this.settingsRepository.findOne({ where: { id: id } });
+    if (updateSettingDto.type === "number") updateSettingDto.value = updateSettingDto.value + "";
+    Object.assign(setting, updateSettingDto);
+    const updated =  await this.settingsRepository.save(setting);
+    if (!updated) {
+      return { result: null, error: 'Ошибка сохранения настройки.'};
+    }
+    return { result: updated, error: null };
   }
 
   async shutdown(): Promise<any> {
@@ -140,11 +94,14 @@ export class SettingsService {
     return this.socket.sendServerTime();
   }
 
-  private async fillSettings(): Promise<any> {
+  private async fillSettings() {
     for (const setting of defaultSettings) {
-      await this.api.create("settings", setting);
+      const newSetting = new CreateSettingDto();
+      newSetting.name = setting.name;
+      newSetting.type = setting.type;
+      newSetting.value = setting.value.toString();
+      await this.create(newSetting);
     }
-    return null;
   }
 
   private cmd(command): Promise<any> {

@@ -1,4 +1,4 @@
-import { ACTION } from "../types/actionType.interface";
+import { ACTION } from "../entities/action-types.entity";
 
 export const defaultActions = [
   {

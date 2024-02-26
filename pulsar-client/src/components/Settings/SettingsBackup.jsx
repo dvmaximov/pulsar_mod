@@ -11,6 +11,7 @@ const SettingsBackup = ({ disableAll }) => {
   };
 
   const onSubmitRestore = (e) => {
+    return;
     var fReader = new FileReader();
     fReader.readAsText(e.target.files[0]);
     fReader.onloadend = function (event) {

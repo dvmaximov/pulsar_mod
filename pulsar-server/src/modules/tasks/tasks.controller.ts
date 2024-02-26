@@ -8,7 +8,7 @@ import {
   Param,
 } from "@nestjs/common";
 
-import { Task } from "./task.interface";
+import { Task } from "./entities/task.entity";
 import { TasksService } from "./tasks.service";
 import { ApiResult } from "../api/api.interface";
 
