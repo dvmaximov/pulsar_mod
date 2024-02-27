@@ -47,6 +47,7 @@ export class UpdateService {
         await access(dbPath, constants.R_OK | constants.W_OK);
       } catch {
         console.log(`${dbPath} not found.`)
+        await this.resetFlag(flagFile);
         return;
       }
       const json = (await readFile(dbPath)).toString();
