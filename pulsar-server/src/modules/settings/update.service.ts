@@ -70,13 +70,17 @@ export class UpdateService {
       })
 
       // Окончание update
+      await this.resetFlag(flagFile);
 
-      const flag = {...FLAG}
-      flag.doUpdate = false;
-      await writeFile(flagFile, JSON.stringify(flag))
     } catch(e) {
       console.log(`file ${flagFile} not found`)
     }
+  }
+
+  private async resetFlag(fileName) {
+    const flag = {...FLAG}
+    flag.doUpdate = false;
+    await writeFile(fileName, JSON.stringify(flag))
   }
 
   async updateCode(): Promise<ApiResult> {

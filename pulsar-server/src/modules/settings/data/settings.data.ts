@@ -33,19 +33,19 @@ export const defaultSettings = [
   {
     id: SETTING.SETTING_PORT,
     type: "string",
-    name: "HTTP port",
-    value: "80",
+    name: "HTTP port сервера",
+    value: "",
   },
   {
     id: SETTING.SETTING_SERVER,
     type: "string",
     name: "Общий сервер",
-    value: "",
+    value: "ws://pulsar.centrett.ru",
   },
   {
     id: SETTING.SETTING_STATION,
     type: "string",
     name: "Имя станции",
-    value: "",
+    value: "тестовая станция",
   },
 ];

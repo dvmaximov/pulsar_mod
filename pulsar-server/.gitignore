@@ -4,6 +4,7 @@
 /backup
 pulsar.sqlite
 db.json
+package.json
 package-lock.json
 .env
 
