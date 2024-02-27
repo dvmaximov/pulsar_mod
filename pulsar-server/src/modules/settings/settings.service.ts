@@ -9,7 +9,7 @@ import * as cp from "child_process";
 import { on, emit, reconnect } from "src/modules/api/socket-client.service";
 import { SETTING, Setting } from "./entities/setting.entity"
 import { CreateSettingDto } from "./dto/create-setting.dto";
-import { UpdateSettingDto } from "./dto/Update-setting.dto";
+import { UpdateSettingDto } from "./dto/update-setting.dto";
 
 const exec = cp.exec;
 
