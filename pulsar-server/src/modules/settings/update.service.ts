@@ -44,7 +44,7 @@ export class UpdateService {
 
       const dbPath = join(__dirname, '../../../db.json');
       try {
-        access(dbPath, constants.R_OK | constants.W_OK);
+        await access(dbPath, constants.R_OK | constants.W_OK);
       } catch {
         console.log(`${dbPath} not found.`)
         return;
