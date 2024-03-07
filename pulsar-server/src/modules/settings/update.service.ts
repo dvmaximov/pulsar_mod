@@ -42,33 +42,33 @@ export class UpdateService {
 
       // Начало update
 
-      const dbPath = join(__dirname, '../../../db.json');
-      try {
-        await access(dbPath, constants.R_OK | constants.W_OK);
-      } catch {
-        console.log(`${dbPath} not found.`)
-        await this.resetFlag(flagFile);
-        return;
-      }
-      const json = (await readFile(dbPath)).toString();
+      // const dbPath = join(__dirname, '../../../db.json');
+      // try {
+      //   await access(dbPath, constants.R_OK | constants.W_OK);
+      // } catch {
+      //   console.log(`${dbPath} not found.`)
+      //   await this.resetFlag(flagFile);
+      //   return;
+      // }
+      // const json = (await readFile(dbPath)).toString();
 
-      const db = JSON.parse(json);
+      // const db = JSON.parse(json);
       
-      db.settings.forEach(async setting => {
-        await this.settings.update(setting.id, setting);
-      });
+      // db.settings.forEach(async setting => {
+      //   await this.settings.update(setting.id, setting);
+      // });
 
-      db.tasks.forEach(async task => {
-        const newTaskPack = TaskPack.taskToPack(task);
-        let taskPack = this.tasksRepository.create(newTaskPack);
-        await this.tasksRepository.save(taskPack);
-      })
+      // db.tasks.forEach(async task => {
+      //   const newTaskPack = TaskPack.taskToPack(task);
+      //   let taskPack = this.tasksRepository.create(newTaskPack);
+      //   await this.tasksRepository.save(taskPack);
+      // })
 
-      db.works.forEach(async work => {
-        const newWorkPack = WorkPack.workToPack(work);
-        let workPack = this.worksRepository.create(newWorkPack);
-        await this.worksRepository.save(workPack);
-      })
+      // db.works.forEach(async work => {
+      //   const newWorkPack = WorkPack.workToPack(work);
+      //   let workPack = this.worksRepository.create(newWorkPack);
+      //   await this.worksRepository.save(workPack);
+      // })
 
       // Окончание update
       await this.resetFlag(flagFile);
