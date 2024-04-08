@@ -80,6 +80,7 @@ export class DeviceService {
   }
 
   private async calculeteAngle(azimuth): Promise<any> {
+    const zeroAzimuthTime = 5;
     let speed: any = await this.settings.getById(SETTING.SETTING_AZIMUTH_SPEED);
     speed = +speed.result.value;
     if (speed === 0) return 0;
@@ -94,7 +95,7 @@ export class DeviceService {
      * При установке 0 по азимуту добавить 1 секутду для гарантии достижения стопора
      * (time отрицательный)
      */
-    if (different !== 0 && azimuth === 0) time -= 1;
+    if (different !== 0 && azimuth === 0) time -= zeroAzimuthTime;
 
     return time;
   }

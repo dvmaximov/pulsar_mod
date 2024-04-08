@@ -147,7 +147,7 @@ export class RunnerService {
   private async startWork(work) {
     this.stopped = false;
     if (this.works.currentWork) {
-      this.updateStatus(work, STATUS.STATUS_EXPIRED);
+      await this.updateStatus(work, STATUS.STATUS_EXPIRED);
       return;
     }
     await this.createCurrentWork({ ...work });

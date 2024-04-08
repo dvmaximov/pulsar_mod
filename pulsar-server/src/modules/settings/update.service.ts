@@ -88,7 +88,7 @@ export class UpdateService {
     const answer = { ...initResult };
     answer.result = "Ok";
     try {
-      await this.cmd(`cd /root/pulsar/pulsar-server`);
+      // await this.cmd(`cd /root/pulsar/pulsar-server`);
       // await this.cmd(`rm -rf dist`);
       await this.cmd(`cd /root/pulsar`);
       await this.cmd(`git pull origin master`);
