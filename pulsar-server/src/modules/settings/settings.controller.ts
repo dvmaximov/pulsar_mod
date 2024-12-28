@@ -8,7 +8,10 @@ import {
   Body,
   Response,
   StreamableFile,
+  UseInterceptors, UploadedFile
 } from "@nestjs/common";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from "multer";
 import { createReadStream } from "fs";
 import { ApiResult } from "../api/api.interface";
 import { Setting } from "./entities/setting.entity";
@@ -30,7 +33,7 @@ export class SettingsController {
   }
 
   @Get("/updateServer")
-  updateServer(): Promise<any> {
+  async updateServer(): Promise<any> {
     return this.updateService.updateCode().catch(() => {});
   }
 
@@ -47,8 +50,19 @@ export class SettingsController {
   }
 
   @Post("/restore")
-  async restore(@Body() value: any): Promise<ApiResult> {
-    return await this.backupService.restore(value);
+  @UseInterceptors(
+    FileInterceptor("restore", {
+      storage: diskStorage({ destination: "./../restore", filename: (req, file, cb) => {
+        const name = Buffer.from(file.originalname, "latin1").toString(
+          "utf8",
+          ); 
+        cb(null, name)
+      }}), 
+    }),
+  )
+  async restore(@UploadedFile() file: Express.Multer.File): Promise<ApiResult> {
+    const fileName = file.filename; 
+    return await this.backupService.restore(fileName);
   }
 
   @Post("/repair")
@@ -57,22 +71,22 @@ export class SettingsController {
   }
 
   @Get("/serverTime")
-  serverTime(): Promise<any> {
+  async serverTime(): Promise<any> {
     return this.settingsService.serverTime();
   }
 
   @Get("/shutdown")
-  shutdown(): Promise<any> {
+  async shutdown(): Promise<any> {
     return this.settingsService.shutdown().catch(() => {});
   }
 
   @Get("/reboot")
-  reboot(): Promise<any> {
+  async reboot(): Promise<any> {
     return this.settingsService.reboot().catch(() => {});
   }
 
   @Get("/restart")
-  restart(): Promise<any> {
+  async restart(): Promise<any> {
     return this.settingsService.restart().catch(() => {});
   }
 

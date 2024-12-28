@@ -26,12 +26,10 @@ export const reconnect = (
   const portNumber =
     port === "" || !port || port === 0 || port === "0" ? "" : `:${port}`;
   const hostName = `${host}${portNumber}`;
-  console.log(hostName);
-  if (socketConnected) {
+   if (socketConnected) {
     socketConnected = false;
     socket.disconnect();
     socket.hostName = hostName;
-    console.log(socket.hostName);
     socket.connect();
   } else {
     connectClient(host, port, stationName);
@@ -52,7 +50,8 @@ export const connectClient = (
     const portNumber =
       port === "" || !port || port === 0 || port === "0" ? "" : `:${port}`;
     const hostName = `${host}${portNumber}`;
-    socket = io(hostName);
+    
+    socket = io(hostName)
     isFirstConnect = false;
   }
   addOnCallback("connect", () => {

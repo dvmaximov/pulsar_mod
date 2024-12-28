@@ -51,23 +51,33 @@ class ApiService {
   }
 
   async restore(path, value) {
+
     const answer = {
       result: null,
       error: null,
     };
-    let db = null;
-    try {
-      db = JSON.parse(value);
-      if (!db["settings"]) {
-        answer.error = "Неправильное содержимое файла.";
-        return answer;
-      }
-    } catch (e) {
-      answer.error = e;
-      return answer;
-    }
+    // let db = null;
+    // try {
+      // db = JSON.parse(value);
+      // db = value;
+      // if (!db["settings"]) {
+      //   answer.error = "Неправильное содержимое файла.";
+      //   return answer;
+      // }
 
-    return await axios.post(`${host}/${path}`, db);
+    // } catch (e) {
+    //   answer.error = e;
+    //   return answer;
+    // }
+    const formData = new FormData();
+    formData.append('restore', value);
+    console.log(`${host}/${path}`)
+    return await axios.post(`${host}/${path}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+  })
+    // return await axios.post(`${host}/${path}`, db);
   }
 }
 

@@ -10,16 +10,11 @@ const SettingsBackup = ({ disableAll }) => {
     settings.backup();
   };
 
-  const onSubmitRestore = (e) => {
-    return;
-    var fReader = new FileReader();
-    fReader.readAsText(e.target.files[0]);
-    fReader.onloadend = function (event) {
-      settings.restore(event.target.result).then((data) => {
-        console.log(data);
-      });
-    };
-  };
+const onSubmitRestore = async (e) => {
+
+  await  settings.restore(e.target.files[0]);
+
+};
 
   return (
     <>

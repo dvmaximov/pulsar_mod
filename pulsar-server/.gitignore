@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /backup
+/restore
 pulsar.sqlite
 db.json
 package.json

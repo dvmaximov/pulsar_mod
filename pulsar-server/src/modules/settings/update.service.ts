@@ -112,6 +112,34 @@ export class UpdateService {
     return answer;
   }
 
+  // async updateCode(): Promise<ApiResult> {
+  //   const answer = { ...initResult };
+  //   answer.result = "Ok";
+  //   try {
+  //     // await this.cmd(`cd /root/pulsar/pulsar-server`);
+  //     // await this.cmd(`rm -rf dist`);
+  //     await this.cmd(`cd /root/pulsar`);
+  //     await this.cmd(`git pull origin master`);
+
+  //     await this.cmd(`cd /root/pulsar/pulsar-server`);
+  //     await this.cmd(`npm run build`);
+
+
+  //     // await this.cmd(`npm install`);
+
+
+  //   } catch (e) {
+  //     answer.result = null;
+  //     answer.error = e;
+  //   }
+
+  //   try {
+  //     await this.cmd(`pm2 restart 0`);
+  //   } catch {}
+
+  //   return answer;
+  // }
+
   // async getCurrentVersion(): Promise<number> {
   //   return await (
   //     await this.settings.getById(SETTING.SETTING_VERSION)

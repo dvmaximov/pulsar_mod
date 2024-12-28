@@ -52,13 +52,17 @@ export class BackupService {
     return { fileName: name, dist };
   }
 
-  async restore(value): Promise<any> {
+  async restore(fileName: string): Promise<any> {
     const answer = { ...initResult };
 
-    answer.result = "Ok";
+    answer.result = "Ok"; 
     try {
-      const source = path.resolve(__dirname, "../../../db.json");
-      writeFileSync(source, JSON.stringify(value));
+      const source = path.resolve(__dirname, "../../../pulsar.sqlite");
+
+      // await this.cmd(`copy D:\\WEB\\pulsar\\pulsar_mod\\restore\\${fileName} D:\\WEB\\pulsar\\pulsar_mod\\pulsar-server\\pulsar.sqlite`);
+
+      await this.cmd(`cp \root\pulsar\pulsar_mod\restore\${fileName} \root\pulsar\pulsar_mod\pulsar-server\pulsar.sqlite`);
+      await this.cmd(`del \root\pulsar\pulsar_mod\restore\${fileName}`);
       await this.cmd(`pm2 restart 0`);
     } catch (e) {
       answer.result = null;
@@ -68,21 +72,40 @@ export class BackupService {
     return answer;
   }
 
+  // async restore(value): Promise<any> {
+  //   const answer = { ...initResult };
+
+  //   answer.result = "Ok";
+  //   try {
+  //     const source = path.resolve(__dirname, "../../../pulsar.sqlite");
+  //     // writeFileSync(source, JSON.stringify(value));
+  //     writeFileSync(source, value);
+  //     // await this.cmd(`pm2 restart 0`);
+  //     console.log('success')
+  //   } catch (e) {
+  //     console.log(e);
+  //     answer.result = null;
+  //     answer.error = e;
+  //   }
+
+  //   return answer;
+  // }
+
   async repair(): Promise<any> {
-    const name = "auto_backup.json";
     let answer = { ...initResult };
+    // const name = "auto_backup.json";
+    // let db = "";
 
-    const source = path.resolve(__dirname, `../../../../backup/${name}`);
-    let db = "";
-    try {
-      db = readFileSync(source, "utf8").toString();
-    } catch {
-      return answer;
-    }
+    // const source = path.resolve(__dirname, `../../../../backup/${name}`);
+    // try {
+    //   db = readFileSync(source, "utf8").toString();
+    // } catch {
+    //   return answer;
+    // }
 
-    db = JSON.parse(db);
+    // db = JSON.parse(db);
 
-    answer = await this.restore(db);
+    // answer = await this.restore(db);
     return answer;
   }
 
