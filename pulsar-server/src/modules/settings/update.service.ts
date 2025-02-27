@@ -95,6 +95,7 @@ export class UpdateService {
 
       await this.cmd(`cd /root/pulsar/pulsar-server`);
       await this.cmd(`npm run build`);
+      await this.cmd(`pm2 restart 0`);
 
 
       // await this.cmd(`npm install`);
