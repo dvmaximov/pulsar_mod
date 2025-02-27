@@ -61,8 +61,8 @@ export class BackupService {
 
       // await this.cmd(`copy D:\\WEB\\pulsar\\pulsar_mod\\restore\\${fileName} D:\\WEB\\pulsar\\pulsar_mod\\pulsar-server\\pulsar.sqlite`);
 
-      await this.cmd(`cp /root/pulsar/pulsar_mod/restore/${fileName} /root/pulsar/pulsar-server/pulsar.sqlite`);
-      await this.cmd(`del /root/pulsar/pulsar_mod/restore/${fileName}`);
+      await this.cmd(`cp /root/pulsar/restore/${fileName} /root/pulsar/pulsar-server/pulsar.sqlite`);
+      await this.cmd(`rm /root/pulsar/restore/${fileName}`);
       await this.cmd(`pm2 restart 0`);
     } catch (e) {
       answer.result = null;
