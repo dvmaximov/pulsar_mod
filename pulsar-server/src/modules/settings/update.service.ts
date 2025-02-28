@@ -104,6 +104,7 @@ export class UpdateService {
     } catch (e) {
       answer.result = null;
       answer.error = e;
+      console.log(e);
     }
 
     try {
