@@ -6,10 +6,12 @@ export interface Work {
   id: number;
   type: WorkType;
   status: StatusType;
+  ball: number;
   item: any;
   startTime: number;
   details: any[];
 }
+
 
 @Entity('works') 
 export class WorkPack {
@@ -21,6 +23,9 @@ export class WorkPack {
 
   @Column({ name: 'status', type: 'text', nullable: false})
   status: string;
+
+  @Column({ name: 'ball', nullable: false, default: 0})
+  ball: number;
   
   @Column({ name: 'item' , type: 'text', nullable: false})
   item: string;
@@ -34,6 +39,7 @@ export class WorkPack {
   static packToWork(workPack: WorkPack): Work {
     const work: Work = {
       id: workPack.id,
+      ball: workPack.ball,
       type: JSON.parse(workPack.type),
       status: JSON.parse(workPack.status),
       item: JSON.parse(workPack.item),

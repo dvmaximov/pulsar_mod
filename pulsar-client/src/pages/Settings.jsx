@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import SettingsList from "../components/Settings/SettingsList";
 import SettingsControls from "../components/Settings/SettingsControls";
 import SettingsCalibrate from "../components/Settings/SettingsCalibrate";
+import SettingsBallPosition from "../components/Settings/SettingsBallPosition";
 import SettingsBackup from "../components/Settings/SettingsBackup";
 import BaseDialog from "../components/BaseDialog";
 
@@ -15,6 +16,7 @@ import { settings } from "../store";
 
 const Settings = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openBallDialog, setOpenBallDialog] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [mode, setMode] = useState("azimuth");
   const [confirmMode, setConfirmMode] = useState("");
@@ -24,6 +26,10 @@ const Settings = () => {
   const onOpenDialog = (modeValue) => {
     setMode(modeValue);
     setOpenDialog(true);
+  };
+
+  const onOpenBallDialog = () => {
+    setOpenBallDialog(true);
   };
 
   const onOpenConfirm = (modeValue) => {
@@ -71,6 +77,7 @@ const Settings = () => {
 
   const onCloseDialog = () => {
     setOpenDialog(false);
+    setOpenBallDialog(false);
   };
 
   const onCloseConfirm = () => {
@@ -84,6 +91,7 @@ const Settings = () => {
       <SettingsList></SettingsList>
       <SettingsControls
         openDialog={onOpenDialog}
+        openBallDialog={onOpenBallDialog}
         openConfirm={onOpenConfirm}
         disableAll={disableAll}
       ></SettingsControls>
@@ -92,6 +100,9 @@ const Settings = () => {
 
       <BaseDialog open={openDialog} onCloseDialog={onCloseDialog}>
         <SettingsCalibrate onCancel={onCloseDialog} mode={mode} />
+      </BaseDialog>
+      <BaseDialog open={openBallDialog} onCloseDialog={onCloseDialog}>
+        <SettingsBallPosition onCancel={onCloseDialog} />
       </BaseDialog>
       <BaseDialog open={openConfirm} onCloseDialog={onCloseConfirm}>
         <DialogTitle>

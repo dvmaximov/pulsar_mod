@@ -8,12 +8,15 @@ import { DictonaryModule } from "../dictonary/dictonary.module";
 import { DeviceService } from "./device.service";
 import { SettingsModule } from "../settings/settings.module";
 import { WorkPack } from "./entities/work.entity";
+import { ToolsModule } from "../tools/tools.module";
+
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([WorkPack]),
     DictonaryModule, 
-    SettingsModule
+    SettingsModule,
+    ToolsModule,
   ],
   controllers: [WorksController],
   providers: [WorksService, RunnerService, DeviceService],

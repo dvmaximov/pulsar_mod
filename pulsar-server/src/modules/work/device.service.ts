@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { SettingsService } from "../settings/settings.service";
-import { Gpio } from "./gpio.service";
+import { Gpio } from "../tools/gpio.service";
 import { SETTING } from "../settings/entities/setting.entity";
 import { SocketService } from "../api/socket.service";
 

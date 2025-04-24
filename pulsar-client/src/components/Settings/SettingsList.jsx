@@ -16,7 +16,7 @@ const SettingsList = () => {
 
   const settingList = settings.settingList.map((setting) => {
     let editable = true;
-    if (setting.id === settings.SETTING.SETTING_VERSION) editable = false;
+    if (setting.id === settings.SETTING.SETTING_VERSION || setting.id === settings.SETTING.SETTING_BALL) editable = false;
     return (
       <SettingsItem
         key={setting.id}

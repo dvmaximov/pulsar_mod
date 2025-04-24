@@ -4,6 +4,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
@@ -16,6 +20,7 @@ const AddTask = ({ open, onAddTask, onCloseDialog, task }) => {
   const [title, setTitle] = useState("Новая программа");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [ball, setBall] = useState("");
 
   const onDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -27,12 +32,16 @@ const AddTask = ({ open, onAddTask, onCloseDialog, task }) => {
     setName(e.target.value);
   };
 
+  const onBallChange = (e) => {
+    setBall(e.target.value);
+  };
+
   const onSubmit = () => {
     if (!name) {
       setNameError(true);
       return;
     }
-    onAddTask({ name, description });
+    onAddTask({ name, description, ball });
   };
 
   useEffect(() => {
@@ -40,10 +49,12 @@ const AddTask = ({ open, onAddTask, onCloseDialog, task }) => {
       if (task) {
         setName(task.name);
         setDescription(task.description);
+        setBall(task.ball);
         setTitle("Изменить программу");
       } else {
         setName("");
         setDescription("");
+        setBall(0);
       }
       setNameError(false);
     }
@@ -78,7 +89,22 @@ const AddTask = ({ open, onAddTask, onCloseDialog, task }) => {
             multiline
             maxRows={4}
             onChange={onDescriptionChange}
+            sx={{ mb: 2 }}
           />
+          <FormControl>
+            <InputLabel id="ball-label">Позиция шара</InputLabel>
+            <Select
+              labelId="ball-label"
+              id="ball"
+              label="Позиция шара"
+              value={ball}
+              onChange={onBallChange}
+            >
+              <MenuItem value={0}>Левый</MenuItem>
+              <MenuItem value={1}>Правый</MenuItem>
+            </Select>
+          </FormControl>
+
         </Box>
       </DialogContent>
       <DialogActions>

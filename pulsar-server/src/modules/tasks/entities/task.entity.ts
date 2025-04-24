@@ -12,6 +12,7 @@ export interface TaskAction {
 export interface Task {
   id: number;
   name: string;
+  ball: number;
   description: string;
   actions: TaskAction[];
 }
@@ -27,6 +28,9 @@ export class TaskPack {
   @Column({ name: 'description', length: 100, nullable: false, default: ""})
   description?: string;
 
+  @Column({ name: 'ball',nullable: false, default: 0})
+  ball?: number;
+
   @Column({ name: 'actions' ,type: 'text', nullable: false, default: ""})
   actions?: string;
 
@@ -35,6 +39,7 @@ export class TaskPack {
       id: taskPack.id,
       name: taskPack.name,
       description: taskPack.description ?? "",
+      ball: taskPack.ball,
       actions: JSON.parse(taskPack.actions)
     };
     return task;

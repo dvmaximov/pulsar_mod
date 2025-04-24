@@ -1,11 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { SocketService } from "../api/socket.service";
 import { DictonaryService } from "../dictonary/dictonary.service";
+import { SettingsService } from "../settings/settings.service";
+import { SETTING, BallPosition } from "../settings/entities/setting.entity"
 import { Work } from "./entities/work.entity";
 import { WorksService } from "./works.service";
 import { ACTION, ActionType } from "../dictonary/entities/action-types.entity";
 import { STATUS, StatusType } from "../dictonary/entities/status-types.entity";
 import { DeviceService } from "./device.service";
+import { DriverService } from "../tools/driver.service";
 import { ApiResult } from "../api/api.interface";
 import { BackupService } from "../settings/backup.service";
 import { on, emit } from "src/modules/api/socket-client.service";
@@ -24,6 +27,8 @@ export class RunnerService {
     private dictonary: DictonaryService,
     private socket: SocketService,
     private device: DeviceService,
+    private driver: DriverService,
+    private settings: SettingsService,
     private backupService: BackupService,
   ) {
     this.prepare();
@@ -144,12 +149,13 @@ export class RunnerService {
     });
   }
 
-  private async startWork(work) {
+  private async startWork(work: Work) {
     this.stopped = false;
     if (this.works.currentWork) {
       await this.updateStatus(work, STATUS.STATUS_EXPIRED);
       return;
     }
+    await this.ballDrive(work.item.ball);
     await this.createCurrentWork({ ...work });
     await this.updateStatus(work, STATUS.STATUS_RUN);
     await this.startLoop();
@@ -237,6 +243,29 @@ export class RunnerService {
 
   async calibrateSlope(time) {
     await this.device.calibrateSlope(time);
+  }
+
+  private async ballDrive(position: BallPosition) {
+    const updateBallSetting = async (value: number) => {
+      let setting: any = await this.settings.getById(
+        SETTING.SETTING_BALL,
+      );
+      setting = setting.result;
+      setting.value = value;
+      await this.settings.update(SETTING.SETTING_BALL, setting);
+    }
+
+    const ball = await this.settings.getBall();
+    const angle = await this.settings.getBallAngle();
+    if (position === BallPosition.BALL_LEFT && ball == BallPosition.BALL_RIGHT) {
+      await this.driver.rotateCCW(angle);
+      await updateBallSetting(position);
+    }
+    if (position === BallPosition.BALL_RIGHT && ball == BallPosition.BALL_LEFT) {
+      await this.driver.rotateCW(angle);
+      await updateBallSetting(position);
+    }
+    
   }
 
   private async startLoop() {

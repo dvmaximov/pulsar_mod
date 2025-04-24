@@ -23,6 +23,16 @@ class Settings {
     this.SETTING = data;
   }
 
+  async rotateCW(angle) {
+    const res = await api.rotateCW("api/settings/rotateCW", angle);;
+    return res.data;
+  }
+
+  async rotateCCW(angle) {
+    const res = await api.rotateCW("api/settings/rotateCCW", angle);;
+    return res.data;
+  }
+
   async fetch() {
     const answer = await api.fetch("api/settings");
     this.fill(answer.settings);

@@ -24,6 +24,8 @@ const SettingsItem = ({ setting, onEdit, editable = true }) => {
     onCloseDialog();
   };
 
+  const getBallText = (value) => value === "0" ? "левый" : "правый"
+
   return (
     <>
       <ListItem
@@ -51,7 +53,7 @@ const SettingsItem = ({ setting, onEdit, editable = true }) => {
               color: "blue",
             }}
           >
-            {setting.value}
+            {setting.id === 9 ? getBallText(setting.value)  : setting.value}
           </Typography>
           {editable && <Button onClick={onOpenDialog}>Изменить</Button>}
         </Box>

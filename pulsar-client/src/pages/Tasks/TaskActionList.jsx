@@ -128,11 +128,12 @@ const TaskActionList = () => {
     return result;
   }, []);
 
-  const onEditTask = ({ name, description }) => {
+  const onEditTask = ({ name, description, ball }) => {
     const updatedTask = {
       ...currentTask,
       name,
       description,
+      ball,
     };
     setCurrentTask(updatedTask);
     setOpenEditTask(false);
@@ -196,7 +197,8 @@ const TaskActionList = () => {
             my: 1,
           }}
         >
-          {`Наименование: ${currentTask.name || ""}`}
+          {`Наименование: ${currentTask.name || ""}`} <br></br>
+          {`Позиция шара: ${currentTask.ball === 0 ? "левый" : "правый"}`}
         </Typography>
       </Box>
 

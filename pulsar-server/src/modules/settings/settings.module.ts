@@ -9,9 +9,12 @@ import { Setting } from "./entities/setting.entity";
 import { TaskPack } from "../tasks/entities/task.entity";
 import { WorkPack } from "../work/entities/work.entity";
 
+import { ToolsModule } from "../tools/tools.module";
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Setting, TaskPack, WorkPack]),
+    ToolsModule,
   ],
   controllers: [SettingsController],
   providers: [SettingsService, BackupService, UpdateService],

@@ -9,7 +9,14 @@ export const SETTING = {
   SETTING_PORT: 6,
   SETTING_SERVER: 7,
   SETTING_STATION: 8,
+  SETTING_BALL: 9,
+  SETTING_BALL_ANGLE: 10,
 };
+
+export enum BallPosition {
+  BALL_LEFT,
+  BALL_RIGHT,
+}
 
 @Entity('settings') 
 export class Setting {

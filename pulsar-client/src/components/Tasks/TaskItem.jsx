@@ -70,11 +70,19 @@ const TaskItem = ({ task, onSelect, onRemove }) => {
             variant="p"
             component="span"
             sx={{
+              width: "30%",
               padding: 1,
               fontSize: "caption.fontSize",
             }}
           >
             {task.description}
+          </Typography>
+          <Typography
+            variant="p"
+            component="span"
+            sx={{ width: { sm: "20%" }, padding: 1, textAlign: "right" }}
+          >
+            {task.ball === 0 ? "левый" : "правый"}
           </Typography>
         </Box>
         <Box

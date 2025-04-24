@@ -15,6 +15,7 @@ import { WorkType } from "./modules/dictonary/entities/work-types.entity";
 import { Setting } from "./modules/settings/entities/setting.entity";
 import { TaskPack } from "./modules/tasks/entities/task.entity";
 import { WorkPack } from "./modules/work/entities/work.entity";
+import { ToolsModule } from './modules/tools/tools.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { WorkPack } from "./modules/work/entities/work.entity";
     SettingsModule,
     TasksModule,
     WorksModule,
+    ToolsModule,
   ],
   controllers: [AppController],
   providers: [],

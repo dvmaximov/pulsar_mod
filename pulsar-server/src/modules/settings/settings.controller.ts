@@ -13,11 +13,12 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from "multer";
 import { createReadStream } from "fs";
-import { ApiResult } from "../api/api.interface";
+import { ApiResult, initResult } from "../api/api.interface";
 import { Setting } from "./entities/setting.entity";
 import { SettingsService } from "./settings.service";
 import { BackupService } from "./backup.service";
 import { UpdateService } from "./update.service";
+import { DriverService } from "../tools/driver.service";
 
 @Controller("api/settings")
 export class SettingsController {
@@ -25,6 +26,7 @@ export class SettingsController {
     private readonly settingsService: SettingsService,
     private readonly backupService: BackupService,
     private readonly updateService: UpdateService,
+    private readonly driverService: DriverService,
   ) {}
 
   @Get()
@@ -90,6 +92,21 @@ export class SettingsController {
     return this.settingsService.restart().catch(() => {});
   }
 
+
+  @Get("/rotateCW/:angle")
+  async rotateCW(@Param("angle") angle): Promise<ApiResult> {
+    await this.driverService.rotateCW(+angle);
+    const result = {...initResult, result: true}
+    return result;
+  }
+
+  @Get("/rotateCCW/:angle")
+  async rotateCCW(@Param("angle") angle): Promise<ApiResult> {
+    await this.driverService.rotateCCW(+angle);
+    const result = {...initResult, result: true}
+    return result;
+  }
+  
   @Put(":id")
   async update(@Param("id") id, @Body() setting: Setting): Promise<any> {
     return this.settingsService.update(id, setting);

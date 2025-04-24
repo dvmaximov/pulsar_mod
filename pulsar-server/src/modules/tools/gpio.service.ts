@@ -33,12 +33,12 @@ export class Gpio {
       });
   }
 
-  init() {
+  async init() {
     if (this.up) this.cmd(`gpio -1 write ${this.pin} 1`).catch(emptyFn);
     return this.cmd(`gpio -1 mode ${this.pin} ${this.mode}`).catch(emptyFn);
   }
 
-  read() {
+  async read() {
     return this.cmd(`gpio -1 read ${this.pin}`)
       .then((state: string) => {
         return state.replace(/[^\d]/gm, "");
@@ -46,7 +46,7 @@ export class Gpio {
       .catch(emptyFn);
   }
 
-  write(value) {
+  async write(value: number) {
     return this.cmd(`gpio -1 write ${this.pin} ${value}`).catch(emptyFn);
   }
 
@@ -59,5 +59,21 @@ export class Gpio {
         resolve(stdout);
       });
     });
+  }
+
+  static runCommandSync(command: any) {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        // console.log(error);
+      }
+    });
+  }
+  
+  static arrayPinsToCommand(pinsArray: number[], valueArray: number[]): string {
+    let result = "";
+    for (let [idx, pin] of pinsArray.entries()) {
+      result += `gpio -1 write ${pin} ${valueArray[idx]};`
+    }
+    return result;
   }
 }

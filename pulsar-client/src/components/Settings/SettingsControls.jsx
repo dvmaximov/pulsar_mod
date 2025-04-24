@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 
 import { settings } from "../../store";
 
-const SettingsControls = ({ openDialog, openConfirm, disableAll }) => {
+const SettingsControls = ({ openDialog, openBallDialog, openConfirm, disableAll }) => {
   const onSubmitUpdate = () => {
     settings.shutdown;
   };
@@ -63,6 +63,17 @@ const SettingsControls = ({ openDialog, openConfirm, disableAll }) => {
         sx={{ mr: 1, mb: 1 }}
       >
         Калибровка наклона
+      </Button>
+      <Button
+        disabled={disableAll}
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          openBallDialog();
+        }}
+        sx={{ mr: 1, mb: 1 }}
+      >
+       Позиция шара
       </Button>
     </>
   );

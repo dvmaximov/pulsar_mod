@@ -15,6 +15,7 @@ const exec = cp.exec;
 
 @Injectable()
 export class SettingsService {
+
   constructor(
     private socket: SocketService,
     @InjectRepository(Setting) private readonly settingsRepository: Repository<Setting>,
@@ -23,8 +24,33 @@ export class SettingsService {
       this.socket.sendServerTime();
     }, 60 * 1000);
 
-    this.settingsRepository.find().then((actions) => {
-      if (actions.length === 0) this.fillSettings();
+    this.settingsRepository.find().then((settings) => {
+      if (settings.length === 0) {
+        this.fillSettings();
+        return;
+      }
+      //для шара - потом убрать
+      const ball = settings.find(setting => setting.id === SETTING.SETTING_BALL);
+      if (!ball) {
+        const newSetting = new Setting();
+        newSetting.id = SETTING.SETTING_BALL;
+        newSetting.name = "текущее положение шара";
+        newSetting.type = "number";
+        newSetting.value = "0";
+        this.create(newSetting);
+      }
+      const ball_angle = settings.find(setting => setting.id === SETTING.SETTING_BALL_ANGLE);
+      if (!ball_angle) {
+        const newSetting = new Setting();
+        newSetting.id = SETTING.SETTING_BALL_ANGLE;
+        newSetting.name = "угол шара";
+        newSetting.type = "number";
+        newSetting.value = "0";
+        this.create(newSetting);
+      }
+      // type: "number",
+      // name: "угол шара",
+      // value: 0,
     });
   }
 
@@ -65,6 +91,16 @@ export class SettingsService {
       return ;
     }
     return (user);  
+  }
+
+  async getBall(): Promise<number> {
+    const ball = await this.findOne(SETTING.SETTING_BALL);
+    return +ball.value;
+  }
+
+  async getBallAngle(): Promise<number> {
+    const angle = await this.findOne(SETTING.SETTING_BALL_ANGLE);
+    return +angle.value;
   }
 
   async update(id: number, updateSettingDto: UpdateSettingDto): Promise<ApiResult> {

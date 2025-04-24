@@ -1,4 +1,4 @@
-import { SETTING } from "../entities/setting.entity";
+import { SETTING, BallPosition } from "../entities/setting.entity";
 export const defaultSettings = [
   {
     id: SETTING.SETTING_AZIMUTH_SPEED,
@@ -47,5 +47,17 @@ export const defaultSettings = [
     type: "string",
     name: "Имя станции",
     value: "тестовая станция",
+  },
+  {
+    id: SETTING.SETTING_BALL,
+    type: "number",
+    name: "текущее положение шара",
+    value: BallPosition.BALL_LEFT,
+  },
+  {
+    id: SETTING.SETTING_BALL_ANGLE,
+    type: "number",
+    name: "угол шара",
+    value: 0,
   },
 ];

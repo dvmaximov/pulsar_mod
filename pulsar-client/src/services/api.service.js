@@ -8,6 +8,18 @@ class ApiService {
     return res.data;
   }
 
+  async rotateCW(path,angle) {
+    const res = await axios.get(`${host}/${path}/${angle}`);
+    return res.data;
+  }
+
+  async rotateCCW(path,angle) {
+    console.log(`${host}/${path}/${angle}`)
+    const res = await axios.get(`${host}/${path}/${angle}`);
+    console.log(res);
+    return res.data;
+  }
+
   async fetchById(path, id) {
     const res = await axios.get(`${host}/${path}/${id}`);
     return res.data;
