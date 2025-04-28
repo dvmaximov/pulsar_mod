@@ -155,7 +155,7 @@ export class RunnerService {
       await this.updateStatus(work, STATUS.STATUS_EXPIRED);
       return;
     }
-    if (work.item["ball"]) await this.ballDrive(work.item.ball);
+    if (work.item["ball"] != undefined) await this.ballDrive(work.item.ball);
     await this.createCurrentWork({ ...work });
     await this.updateStatus(work, STATUS.STATUS_RUN);
     await this.startLoop();
