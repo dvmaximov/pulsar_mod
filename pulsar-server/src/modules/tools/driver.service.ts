@@ -22,6 +22,8 @@ const FULL_ROTATION_STEPS = 2038; //чтобы помнить
 const STEPS_OF_DEGREE = 5.66;
 const MAX_STEPS_COUNT = 4;
 
+const initPins = [15, 18, 16, 22]; // int1, int3, int2, int4
+
 class Position {
   private current = -1;
   constructor (private readonly stepCount: number) {}
@@ -65,11 +67,10 @@ export class DriverService {
                 [ 1, 0, 0, 1 ],
         ];
 
-  constructor(in1: number,in2: number,in3: number,in4: number) {
-    this.pins[0] = new Gpio({ pin: in1, up: false });
-    this.pins[1] = new Gpio({ pin: in2, up: false });
-    this.pins[2] = new Gpio({ pin: in3, up: false });
-    this.pins[3] = new Gpio({ pin: in4, up: false });
+  constructor() {
+    for (const [idx, inPin] of initPins.entries()) {
+      this.pins[idx] = new Gpio({ pin: inPin, up: false });
+    }
   }
 
   private writePin(pin: Gpio, value: number) {
