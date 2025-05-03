@@ -89,7 +89,6 @@ export class DriverService {
       command += `gpio -1 write ${this.pins[idx].pin} ${value};`
       // this.writePin(this.pins[idx], value);
     }
-    console.log(command)
     Gpio.runCommandSync(command);
 
   }
@@ -119,6 +118,7 @@ export class DriverService {
       this.step(this.position.increase())
     }
     await this.stop();
+    this.isRunning = false; 
   }
 
   async rotateCCW(degree: number){
@@ -132,6 +132,7 @@ export class DriverService {
       this.step(this.position.decrease())
     }
     await this.stop();
+    this.isRunning = false; 
   }
 
 }
