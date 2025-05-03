@@ -94,9 +94,15 @@ export class DriverService {
   }
 
   async stop(){
-    this.pins.forEach(async (gpio) => this.writePin(gpio, 0));
+    // this.pins.forEach((gpio) => this.writePin(gpio, 0));
+    let command = '';
+    for (const pin of this.pins){
+      command += `gpio -1 write ${pin.pin} 0;`
+      // this.writePin(this.pins[idx], value);
+    }
+    Gpio.runCommandSync(command);
     this.position.clear();
-    // console.log('stopped');
+    console.log(command);
   }
   
   async test (degree: number) {
