@@ -48,6 +48,7 @@ class Position {
 @Injectable()
 export class DriverService {
   private position = new Position(MAX_STEPS_COUNT);
+  private isRunning = false;
   private pins: Gpio[] = [];
         // private steps = [
         //      [ 1, 0, 0, 0 ],
@@ -88,6 +89,7 @@ export class DriverService {
       command += `gpio -1 write ${this.pins[idx].pin} ${value};`
       // this.writePin(this.pins[idx], value);
     }
+    console.log(command)
     Gpio.runCommandSync(command);
 
   }
@@ -108,20 +110,28 @@ export class DriverService {
 
   async rotateCW(degree: number){
     await this.stop();
+    if (this.isRunning) return;
+    this.isRunning = true;
     const steps = this.calculateSteps(degree);
+    console.log(steps);
+    if (steps === 0 || isNaN(steps)) return;
     for (let i of Array(steps).keys()) {
       this.step(this.position.increase())
     }
-    this.stop();
+    await this.stop();
   }
 
   async rotateCCW(degree: number){
     await this.stop();
+    if (this.isRunning) return;
+    this.isRunning = true;    
     const steps = this.calculateSteps(degree);
+    console.log(steps);
+    if (steps === 0 || isNaN(steps)) return;    
     for (let i of Array(steps).keys()) {
       this.step(this.position.decrease())
     }
-    this.stop();
+    await this.stop();
   }
 
 }
