@@ -89,6 +89,7 @@ export class DriverService {
       command += `gpio -1 write ${this.pins[idx].pin} ${value};`
       // this.writePin(this.pins[idx], value);
     }
+    console.log(command);
     Gpio.runCommandSync(command);
 
   }
