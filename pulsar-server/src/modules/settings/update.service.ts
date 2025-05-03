@@ -90,6 +90,7 @@ export class UpdateService {
     try {
       // await this.cmd(`cd /root/pulsar/pulsar-server`);
       // await this.cmd(`rm -rf dist`);
+      await this.cmd(`export NODE_OPTIONS=--max-old-space-size=1500`);
       await this.cmd(`cd /root/pulsar`);
       await this.cmd(`git pull origin master`);
 

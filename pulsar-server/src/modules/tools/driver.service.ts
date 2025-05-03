@@ -106,6 +106,7 @@ export class DriverService {
   }
 
   async rotateCW(degree: number){
+    await this.stop();
     const steps = this.calculateSteps(degree);
     for (let i of Array(steps).keys()) {
       this.step(this.position.increase())
@@ -114,6 +115,7 @@ export class DriverService {
   }
 
   async rotateCCW(degree: number){
+    await this.stop();
     const steps = this.calculateSteps(degree);
     for (let i of Array(steps).keys()) {
       this.step(this.position.decrease())
