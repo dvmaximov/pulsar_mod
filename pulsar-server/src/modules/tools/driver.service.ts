@@ -101,8 +101,8 @@ export class DriverService {
       // this.writePin(this.pins[idx], value);
     }
     Gpio.runCommandSync(command);
+    this.isRunning = false;
     this.position.clear();
-    console.log(command);
   }
   
   async test (degree: number) {
@@ -118,8 +118,8 @@ export class DriverService {
     if (this.isRunning) return;
     this.isRunning = true;
     const steps = this.calculateSteps(degree);
-    console.log(steps);
     if (steps === 0 || isNaN(steps)) return;
+    console.log(steps);
     for (let i of Array(steps).keys()) {
       this.step(this.position.increase())
     }
@@ -132,8 +132,8 @@ export class DriverService {
     if (this.isRunning) return;
     this.isRunning = true;    
     const steps = this.calculateSteps(degree);
-    console.log(steps);
     if (steps === 0 || isNaN(steps)) return;    
+    console.log(steps);
     for (let i of Array(steps).keys()) {
       this.step(this.position.decrease())
     }
