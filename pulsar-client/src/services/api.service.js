@@ -14,9 +14,9 @@ class ApiService {
   }
 
   async rotateCCW(path,angle) {
-    console.log(`${host}/${path}/${angle}`)
+    // console.log(`${host}/${path}/${angle}`)
     const res = await axios.get(`${host}/${path}/${angle}`);
-    console.log(res);
+    // console.log(res);
     return res.data;
   }
 

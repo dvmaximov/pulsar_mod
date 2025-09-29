@@ -11,13 +11,16 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
 import { settings } from "../../store";
+const MAX_STEPS = 2076;
 
 const SettingsBallPosition = ({ onCancel }) => {
-  const [value, setValue] = useState( 0.2 );
+  const [value, setValue] = useState( 1 );
   const [disable, setDisable] = useState( false );
 
   const onChangeValue = (e) => {
     let newValue = e.target.value;
+    newValue = newValue > MAX_STEPS ? MAX_STEPS : newValue;
+    newValue = newValue < 0 ? 1 : newValue;
     setValue(newValue);
   };
 
@@ -36,7 +39,8 @@ const SettingsBallPosition = ({ onCancel }) => {
   return (
     <>
       <DialogTitle>
-        <Typography>Установка позиции шара</Typography>
+        <Typography>Установка позиции шара (шаги)</Typography>
+        <Typography>Полный оборот - 2076 шагов, 1 градус - ~5,62 шага.</Typography>
       </DialogTitle>
       <DialogContent>
         <Box
@@ -45,16 +49,16 @@ const SettingsBallPosition = ({ onCancel }) => {
             width:"100%",
           }}
         > <FormControl sx={{ width:"100%",display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
-            <Button onClick={rotateCCW}>против часовой</Button>
+            <Button disabled={disable} onClick={rotateCCW}>против часовой</Button>
             <TextField
               autoFocus
               sx={{ m: 1, width: "40%"}}
-              label="Значение угла поворота"
+              label="Кол-во шагов поворота"
               type="number"
               inputProps={{
-                max: 2,
-                min: 0.2,
-                step: 0.1,
+                max: 2076,
+                min:1,
+                step: 1,
               }}
               value={value}
               onChange={onChangeValue}
@@ -62,7 +66,7 @@ const SettingsBallPosition = ({ onCancel }) => {
                 shrink: true,
               }}
             />
-            <Button onClick={rotateCW}>по часовой</Button>
+            <Button disabled={disable} onClick={rotateCW}>по часовой</Button>
           </FormControl> 
         </Box>
       </DialogContent>

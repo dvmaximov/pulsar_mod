@@ -10,7 +10,7 @@ export const SETTING = {
   SETTING_SERVER: 7,
   SETTING_STATION: 8,
   SETTING_BALL: 9,
-  SETTING_BALL_ANGLE: 10,
+  SETTING_BALL_STEPS: 10,
 };
 
 export enum BallPosition {

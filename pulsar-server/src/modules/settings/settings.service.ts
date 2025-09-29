@@ -39,10 +39,10 @@ export class SettingsService {
         newSetting.value = "0";
         this.create(newSetting);
       }
-      const ball_angle = settings.find(setting => setting.id === SETTING.SETTING_BALL_ANGLE);
+      const ball_angle = settings.find(setting => setting.id === SETTING.SETTING_BALL_STEPS);
       if (!ball_angle) {
         const newSetting = new Setting();
-        newSetting.id = SETTING.SETTING_BALL_ANGLE;
+        newSetting.id = SETTING.SETTING_BALL_STEPS;
         newSetting.name = "угол шара";
         newSetting.type = "number";
         newSetting.value = "0";
@@ -99,7 +99,7 @@ export class SettingsService {
   }
 
   async getBallAngle(): Promise<number> {
-    const angle = await this.findOne(SETTING.SETTING_BALL_ANGLE);
+    const angle = await this.findOne(SETTING.SETTING_BALL_STEPS);
     return +angle.value;
   }
 

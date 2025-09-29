@@ -55,9 +55,9 @@ export const defaultSettings = [
     value: BallPosition.BALL_LEFT,
   },
   {
-    id: SETTING.SETTING_BALL_ANGLE,
+    id: SETTING.SETTING_BALL_STEPS,
     type: "number",
-    name: "угол шара",
+    name: "кол-во шагов шара",
     value: 0,
   },
 ];
