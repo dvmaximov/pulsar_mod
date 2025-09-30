@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import api from "../services/api.service";
+import {  dictonary } from "./dictonary";
 
 class Works {
   workList = [];
@@ -42,6 +43,15 @@ class Works {
     const newWorks = this.workList.filter((item) => item.id !== work.id);
     this.fill(newWorks);
     return answer.result;
+  }
+
+  async clear() {
+    this.workList.forEach(async (work) => {
+      if (work.status.id === dictonary.STATUS.STATUS_DONE || work.status.id === dictonary.STATUS.STATUS_EXPIRED || work.status.id === dictonary.STATUS.STATUS_STOPPED) {
+        await api.remove("api/works", work.id);
+      }
+      
+    })
   }
 }
 

@@ -62,12 +62,13 @@ const TaskList = () => {
   const items = useMemo(
     () =>
       tasks.taskList.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          onSelect={onSelect}
-          onRemove={onRemove}
-        />
+            <TaskItem
+              key={task.id}
+              task={task}
+              onSelect={onSelect}
+              onRemove={onRemove}
+            />
+     
       )),
     [tasks.taskList]
   );

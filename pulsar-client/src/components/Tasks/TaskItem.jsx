@@ -12,7 +12,7 @@ import AddWork from "./AddWork";
 
 import { works, dictonary } from "../../store";
 
-const TaskItem = ({ task, onSelect, onRemove }) => {
+const TaskItem = ({ task, onSelect, onRemove}) => {
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 

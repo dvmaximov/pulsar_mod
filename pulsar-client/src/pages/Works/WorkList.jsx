@@ -14,6 +14,7 @@ import { works } from "../../store";
 const WorkList = () => {
   const navigate = useNavigate();
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [openClearConfirm, setOpenClearConfirm] = useState(false);
   const [removeWork, setRemoveWork] = useState(null);
 
   useEffect(() => works.fetch(), []);
@@ -21,6 +22,10 @@ const WorkList = () => {
   const onRemove = (work) => {
     setRemoveWork(work);
     setOpenConfirm(true);
+  };
+
+  const onClear = () => {
+    setOpenClearConfirm(true);
   };
 
   const onRemoveOk = () => {
@@ -35,6 +40,17 @@ const WorkList = () => {
   const onRemoveCancel = () => {
     setRemoveWork(null);
     setOpenConfirm(false);
+  };
+
+  const onClearOk = () => {
+    works.clear().then(() => {
+      works.fetch();
+    });
+    setOpenClearConfirm(false);
+  };
+  
+  const onClearCancel = () => {
+    setOpenClearConfirm(false);
   };
 
   const items = useMemo(
@@ -67,6 +83,9 @@ const WorkList = () => {
         }}
       >
         <Typography variant="h5">Список установленных задач</Typography>
+        <Button variant="outlined" size="small" onClick={() => onClear()}>
+          Очистить
+        </Button>
       </Box>
       <List>{items}</List>
       <ConfirmDialog
@@ -75,6 +94,17 @@ const WorkList = () => {
         onCancel={onRemoveCancel}
       >
         <Typography sx={{ mb: 2 }}>Удалить выбранную задачу?</Typography>
+        <Typography align="center" sx={{ fontWeight: "bold" }}>
+          {removeWork?.status?.name} {removeWork?.item?.name}
+        </Typography>
+      </ConfirmDialog>
+
+      <ConfirmDialog
+        open={openClearConfirm}
+        onOk={onClearOk}
+        onCancel={onClearCancel}
+      >
+        <Typography sx={{ mb: 2 }}>Удалить задачи (отменено, завершено, пропущено)?</Typography>
         <Typography align="center" sx={{ fontWeight: "bold" }}>
           {removeWork?.status?.name} {removeWork?.item?.name}
         </Typography>
