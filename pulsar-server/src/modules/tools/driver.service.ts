@@ -49,7 +49,7 @@ export class DriverService {
       this.pins[1] = new Gpio({ pin: defaultPins[1], up: false });
       this.pins[2] = new Gpio({ pin: defaultPins[2], up: false });
       this.pins[3] = new Gpio({ pin: defaultPins[3], up: false });
-    },3000)
+    },10000)
 
   }
 
