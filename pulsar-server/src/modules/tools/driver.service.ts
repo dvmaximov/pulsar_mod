@@ -55,10 +55,12 @@ export class DriverService {
   }
 
   async rotateCW(angle: number) {
+    await this.stop();
     await this.rotate(angle);
   }
 
   async rotateCCW(angle: number) {
+    await this.stop();
     await this.rotate(-angle);
   }
 
