@@ -21,6 +21,7 @@ const defaultPins = [15, 18, 16, 22]; // int1, int3, int2, int4
 @Injectable()
 export class DriverService {
   private pins: Gpio[] = [];
+  private ready = false;
   private stepNumber = 4;
 
   private direction = 0; // 0 - против часовой, 1 - по часовой
@@ -49,6 +50,7 @@ export class DriverService {
       this.pins[1] = new Gpio({ pin: defaultPins[1], up: false });
       this.pins[2] = new Gpio({ pin: defaultPins[2], up: false });
       this.pins[3] = new Gpio({ pin: defaultPins[3], up: false });
+      this.ready = true;
     },3000);
 
   }
@@ -59,11 +61,13 @@ export class DriverService {
 
   async rotateCW(angle: number) {
     await this.stop();
+    if (!this.ready) return;
     await this.rotate(angle);
   }
 
   async rotateCCW(angle: number) {
     await this.stop();
+    if (!this.ready) return;
     await this.rotate(-angle);
   }
 
