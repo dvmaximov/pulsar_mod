@@ -170,8 +170,11 @@ export class DeviceService {
   }
 
   async setSpark(value): Promise<any> {
-    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_ON);
-    await this.delay(value * 1000);
-    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_OFF);
+    await this.writePin(PIN.PIN_SPARK, value);
+    // await this.delay(value * 1000);
+    // this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_OFF);
+    // this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_ON);
+    // await this.delay(value * 1000);
+    // this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_OFF);
   }
 }
