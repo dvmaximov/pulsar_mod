@@ -9,7 +9,8 @@ const PIN = {
   PIN_RIGHT: 11,
   PIN_UP: 5,
   PIN_DOWN: 3,
-  PIN_SPARK: 26, //13,
+  PIN_SPARK: 13,
+  PIN_SUBSPARK: 26,
 };
 
 const DEVICE = {
@@ -171,8 +172,10 @@ export class DeviceService {
   }
 
   async setSpark(value): Promise<any> {
-    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_ON);
+    await this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_ON);
+    await this.writePin(PIN.PIN_SUBSPARK, DEVICE.DEVICE_SPARK_ON);
     await this.delay(+value * 1000);
-    this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_OFF);
+    await this.writePin(PIN.PIN_SPARK, DEVICE.DEVICE_SPARK_OFF);
+    await this.writePin(PIN.PIN_SUBSPARK, DEVICE.DEVICE_SPARK_OFF);
   }
 }
