@@ -6,7 +6,7 @@ import { SocketService } from "../api/socket.service";
 
 const PIN = {
   PIN_LEFT: 7,
-  PIN_RIGHT: 26, //11,
+  PIN_RIGHT: 24, //11,
   PIN_UP: 5,
   PIN_DOWN: 3,
   PIN_SPARK: 26, //13,
