@@ -35,7 +35,7 @@ export class DeviceService {
     this.driveRight = new Gpio({ pin: PIN.PIN_RIGHT });
     this.driveUp = new Gpio({ pin: PIN.PIN_UP });
     this.driveDown = new Gpio({ pin: PIN.PIN_DOWN });
-    // this.spark = new Gpio({ pin: PIN.PIN_SPARK, up: false });
+    this.spark = new Gpio({ pin: PIN.PIN_SPARK, up: false });
     // this.spark = new Gpio({ pin: PIN.PIN_SPARK });
   }
 
