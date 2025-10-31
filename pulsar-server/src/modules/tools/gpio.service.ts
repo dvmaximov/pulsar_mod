@@ -35,6 +35,7 @@ export class Gpio {
 
   async init() {
     if (this.up) this.cmd(`gpio -1 write ${this.pin} 1`).catch(emptyFn);
+    else this.cmd(`gpio -1 write ${this.pin} 0`).catch(emptyFn);
     return this.cmd(`gpio -1 mode ${this.pin} ${this.mode}`).catch(emptyFn);
   }
 
