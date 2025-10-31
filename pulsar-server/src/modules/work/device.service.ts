@@ -6,7 +6,7 @@ import { SocketService } from "../api/socket.service";
 
 const PIN = {
   PIN_LEFT: 7,
-  PIN_RIGHT: 11,
+  PIN_RIGHT: 26, //11,
   PIN_UP: 5,
   PIN_DOWN: 3,
   PIN_SPARK: 26, //13,
@@ -35,7 +35,7 @@ export class DeviceService {
     this.driveRight = new Gpio({ pin: PIN.PIN_RIGHT });
     this.driveUp = new Gpio({ pin: PIN.PIN_UP });
     this.driveDown = new Gpio({ pin: PIN.PIN_DOWN });
-    this.spark = new Gpio({ pin: PIN.PIN_SPARK, up: false });
+    // this.spark = new Gpio({ pin: PIN.PIN_SPARK, up: false });
     // this.spark = new Gpio({ pin: PIN.PIN_SPARK });
   }
 
