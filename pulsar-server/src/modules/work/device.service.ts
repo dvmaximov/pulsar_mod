@@ -32,8 +32,8 @@ export class DeviceService {
     private readonly socket: SocketService,
   ) {
     this.driveLeft = new Gpio({ pin: PIN.PIN_LEFT });
-    // this.driveRight = new Gpio({ pin: PIN.PIN_RIGHT });
-    this.driveRight = new Gpio({ pin: PIN.PIN_RIGHT, up: false });
+    this.driveRight = new Gpio({ pin: PIN.PIN_RIGHT });
+    // this.driveRight = new Gpio({ pin: PIN.PIN_RIGHT, up: false });
     this.driveUp = new Gpio({ pin: PIN.PIN_UP });
     this.driveDown = new Gpio({ pin: PIN.PIN_DOWN });
     this.spark = new Gpio({ pin: PIN.PIN_SPARK, up: false });
